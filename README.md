@@ -2,9 +2,9 @@
 
 A tiny macOS menu bar utility that hides and shows your menu bar icons with one click.
 
-It adds two items to the menu bar: a **button** (a chevron) and a slim **divider** to its left.
-Click the button to collapse, and every icon to the left of the divider disappears. Click it again
-to bring them back. Everything to the right of the button (Control Center, the clock, ...) is never touched.
+It adds a single **button** (a chevron) to the menu bar. Click it to collapse, and every icon to
+its left disappears. Click it again to bring them back. Everything to the right of the button
+(Control Center, the clock, ...) is never touched.
 
 ## Features
 
@@ -31,16 +31,17 @@ The script builds a release binary and wraps it in an ad-hoc signed `StatusColla
 
 ## Usage
 
-1. Hold **⌘** and drag the divider so the icons you want to hide sit to its left.
+1. Hold **⌘** and drag the button (or other icons) so the icons you want to hide sit to its left.
 2. Click the button to collapse or expand.
-3. If the layout gets into a bad state, use **Reset Layout** in Settings.
+3. If the button goes missing, use **Reset Layout** in Settings.
 
 ## How it works
 
-macOS lays status items out right to left. When collapsed, the divider is made so wide
-(just under half the narrowest display) that macOS cannot fit it, so it hides the divider and
-every item to its left. The button never changes size, so it can't be pushed out of view. If you
-drag the button left of the divider, the two swap roles automatically.
+macOS lays status items out right to left. Collapsing adds a second, invisible item that shares
+the button's autosave name, which makes macOS place it immediately left of the button (and keep it
+there if the button is ⌘-dragged). That item is then made so wide (just under half the narrowest
+display) that macOS cannot fit it, so it hides that item and every item to its left. The button
+never changes size, so it can't be pushed out of view. Expanding removes the invisible item again.
 
 This relies on observed macOS 27 menu bar behavior rather than documented API, so it may need
 adjusting after system updates. Only a notched MacBook display has been tested; external and

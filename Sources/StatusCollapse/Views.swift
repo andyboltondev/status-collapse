@@ -60,10 +60,10 @@ private struct WizardView: View {
     private var arrange: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Choose which icons to hide").font(.title2.bold())
-            Text("Look for the divider \(Text("│").foregroundStyle(.secondary)) and the \(Image(systemName: controller.iconStyle.symbol(collapsed: false))) button in your menu bar.")
+            Text("Look for the \(Image(systemName: controller.iconStyle.symbol(collapsed: false))) button in your menu bar.")
             VStack(alignment: .leading, spacing: 6) {
-                Text("1. Hold ⌘ and drag icons to the **left** of the divider to hide them. You can ⌘-drag the divider too.")
-                Text("2. Collapsing hides everything left of the divider. Icons to its right always stay visible.")
+                Text("1. Hold ⌘ and drag icons to the **left** of the button to hide them. You can ⌘-drag the button too.")
+                Text("2. Collapsing hides everything left of the button. Icons to its right always stay visible.")
             }
             Text("Apple's menu bar doesn't let apps move other apps' icons, so this one step is manual. Positions are remembered.")
                 .font(.callout).foregroundStyle(.secondary)
@@ -96,9 +96,9 @@ private struct SettingsView: View {
         VStack(alignment: .leading, spacing: 16) {
             header
             card("How it works", systemImage: "questionmark.circle") {
-                step(1, "Find the divider \(Text("│").foregroundStyle(.secondary)) and the \(Image(systemName: controller.iconStyle.symbol(collapsed: false))) button in your menu bar.")
-                step(2, "Hold ⌘ and drag icons to the **left** of the divider to make them hideable.")
-                step(3, "Click the button to hide or show them. Icons to the right of the divider always stay visible.")
+                step(1, "Find the \(Image(systemName: controller.iconStyle.symbol(collapsed: false))) button in your menu bar.")
+                step(2, "Hold ⌘ and drag icons to the **left** of the button to make them hideable.")
+                step(3, "Click the button to hide or show them. Icons to its right always stay visible.")
             }
             card("Menu bar", systemImage: "menubar.rectangle") {
                 row("Icon", detail: "The button you click to hide or show icons.",
@@ -137,7 +137,7 @@ private struct SettingsView: View {
                     Button { rerunSetup() } label: { Label("Run Setup", systemImage: "arrow.counterclockwise") }
                         .help("Show the first-run walkthrough again")
                     Button { controller.resetLayout() } label: { Label("Reset Layout", systemImage: "arrow.uturn.backward") }
-                        .help("Recreate the button and divider if they're missing or out of order")
+                        .help("Recreate the button if it's missing")
                     Spacer(minLength: 0)
                     Button {
                         NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.ControlCenter-Settings.extension")!)
