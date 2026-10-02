@@ -410,10 +410,10 @@ final class Controller {
     private func showMenu(from sender: NSStatusBarButton) {
         guard let item = [button, divider].compactMap(\.self).first(where: { $0.button === sender }) else { return }
         let menu = NSMenu()
-        let settings = menu.addItem(withTitle: "Settings…", action: #selector(settingsChosen), keyEquivalent: ",")
+        let settings = menu.addItem(withTitle: "Settings…", action: #selector(settingsChosen), keyEquivalent: "")
         settings.target = self
         menu.addItem(.separator())
-        menu.addItem(withTitle: "Quit StatusCollapse", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
+        menu.addItem(withTitle: "Quit StatusCollapse", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "")
         // Attach only for this click so left-click keeps toggling.
         item.menu = menu
         sender.performClick(nil)

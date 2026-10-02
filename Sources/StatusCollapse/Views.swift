@@ -93,37 +93,125 @@ private struct SettingsView: View {
     let rerunSetup: () -> Void
 
     var body: some View {
-        Form {
-            Section("Menu bar") {
-                Picker("Icon", selection: $controller.iconStyle) {
-                    ForEach(IconStyle.allCases) { style in
-                        Label(style.title, systemImage: style.symbol(collapsed: false)).tag(style)
+        VStack(alignment: .leading, spacing: 16) {
+            header
+            card("How it works", systemImage: "questionmark.circle") {
+                step(1, "Find the divider \(Text("│").foregroundStyle(.secondary)) and the \(Image(systemName: controller.iconStyle.symbol(collapsed: false))) button in your menu bar.")
+                step(2, "Hold ⌘ and drag icons to the **left** of the divider to make them hideable.")
+                step(3, "Click the button to hide or show them. Icons to the right of the divider always stay visible.")
+            }
+            card("Menu bar", systemImage: "menubar.rectangle") {
+                row("Icon", detail: "The button you click to hide or show icons.",
+                    help: "Choose the look of the toggle button") {
+                    Picker("Icon", selection: $controller.iconStyle) {
+                        ForEach(IconStyle.allCases) { style in
+                            Label(style.title, systemImage: style.symbol(collapsed: false)).tag(style)
+                        }
                     }
                 }
-                Picker("Auto-hide", selection: $controller.autoHideSeconds) {
-                    ForEach(Controller.autoHideChoices, id: \.self) { seconds in
-                        Text(seconds == 0 ? "Never" : "After \(seconds) seconds").tag(seconds)
+                Divider()
+                row("Auto-hide", detail: "Hides icons again after you reveal them.",
+                    help: "Re-collapse automatically after a delay") {
+                    Picker("Auto-hide", selection: $controller.autoHideSeconds) {
+                        ForEach(Controller.autoHideChoices, id: \.self) { seconds in
+                            Text(seconds == 0 ? "Never" : "After \(seconds) seconds").tag(seconds)
+                        }
                     }
                 }
-            }
-            Section("Icons") {
-                Text("Icons stay shown while Settings is open. Hold ⌘ and drag them left of the divider to hide them, or right of it to keep them visible.")
-                    .foregroundStyle(.secondary)
-                Button("Run Setup Again", action: rerunSetup)
-                Button("Reset Layout") { controller.resetLayout() }
-                Button("Menu Bar System Settings…") {
-                    NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.ControlCenter-Settings.extension")!)
+                Divider()
+                row("Open at login", detail: "Starts StatusCollapse when you sign in.",
+                    help: "Launch automatically at login") {
+                    Toggle("Open at login", isOn: Binding(
+                        get: { controller.launchAtLogin }, set: controller.setLaunchAtLogin))
+                        .toggleStyle(.switch)
                 }
-            }
-            Section("General") {
-                Toggle("Open at login", isOn: Binding(
-                    get: { controller.launchAtLogin }, set: controller.setLaunchAtLogin))
                 if let error = controller.launchError {
-                    Text(error).foregroundStyle(.red)
+                    Text(error).font(.callout).foregroundStyle(.red)
                 }
             }
+            card("Icons", systemImage: "square.grid.2x2") {
+                Text("Icons stay shown while this window is open so they're easy to arrange. Positions are remembered. macOS doesn't let apps move other apps' icons, so arranging is manual.")
+                    .font(.callout).foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+                HStack(spacing: 8) {
+                    Button { rerunSetup() } label: { Label("Run Setup", systemImage: "arrow.counterclockwise") }
+                        .help("Show the first-run walkthrough again")
+                    Button { controller.resetLayout() } label: { Label("Reset Layout", systemImage: "arrow.uturn.backward") }
+                        .help("Recreate the button and divider if they're missing or out of order")
+                    Spacer(minLength: 0)
+                    Button {
+                        NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.ControlCenter-Settings.extension")!)
+                    } label: { Label("System Settings", systemImage: "gearshape") }
+                        .help("Open Menu Bar settings in System Settings")
+                }
+                .controlSize(.regular)
+            }
+            VStack(spacing: 2) {
+                Text("Right-click the menu bar button for Settings and Quit.")
+                Text("Version \(Self.version) · Build: \(Self.build)")
+            }
+            .font(.caption).foregroundStyle(.tertiary)
+            .frame(maxWidth: .infinity)
         }
-        .formStyle(.grouped)
-        .frame(width: 440, height: 380)
+        .padding(20)
+        .frame(width: 500)
+        .fixedSize(horizontal: false, vertical: true)
+    }
+
+    private static let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "?"
+    private static let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "?"
+
+    private var header: some View {
+        HStack(spacing: 12) {
+            Image(systemName: "chevron.left.2")
+                .font(.system(size: 22, weight: .bold))
+                .foregroundStyle(.white)
+                .frame(width: 44, height: 44)
+                .background(
+                    LinearGradient(colors: [Color(red: 0.18, green: 0.83, blue: 0.75), Color(red: 0.05, green: 0.45, blue: 0.56)],
+                                   startPoint: .top, endPoint: .bottom),
+                    in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+            VStack(alignment: .leading, spacing: 2) {
+                Text("StatusCollapse").font(.title3.bold())
+                Text("Hide menu bar icons you rarely need.").font(.callout).foregroundStyle(.secondary)
+            }
+            Spacer(minLength: 0)
+        }
+    }
+
+    private func card<Content: View>(_ title: String, systemImage: String,
+                                     @ViewBuilder content: () -> Content) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Label(title, systemImage: systemImage)
+                .font(.subheadline.weight(.semibold)).foregroundStyle(.secondary)
+                .padding(.leading, 4)
+            VStack(alignment: .leading, spacing: 10) { content() }
+                .padding(12)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(.quaternary.opacity(0.5), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+                .overlay(RoundedRectangle(cornerRadius: 10, style: .continuous).strokeBorder(.quaternary))
+        }
+    }
+
+    private func step(_ number: Int, _ text: LocalizedStringKey) -> some View {
+        HStack(alignment: .firstTextBaseline, spacing: 8) {
+            Text("\(number)")
+                .font(.caption.bold().monospacedDigit()).foregroundStyle(.white)
+                .frame(width: 18, height: 18)
+                .background(Color(red: 0.05, green: 0.55, blue: 0.62), in: Circle())
+            Text(text).fixedSize(horizontal: false, vertical: true)
+        }
+    }
+
+    private func row<Control: View>(_ title: String, detail: String, help: String,
+                                    @ViewBuilder control: () -> Control) -> some View {
+        HStack(alignment: .center) {
+            VStack(alignment: .leading, spacing: 1) {
+                Text(title)
+                Text(detail).font(.caption).foregroundStyle(.secondary)
+            }
+            Spacer()
+            control().labelsHidden().fixedSize().help(help)
+        }
     }
 }
