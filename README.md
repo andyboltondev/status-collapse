@@ -1,6 +1,11 @@
 # StatusCollapse
 
-A tiny macOS menu bar utility that hides and shows your menu bar icons with one click.
+An easy to use, simple, lightweight and minimal menu bar icon collapsing tool for macOS. One
+button hides and shows your menu bar icons with a single click, with no clutter and nothing else
+to learn.
+
+> **Tested on macOS 27 only.** It is built for macOS 26 and later, but has not been tested on
+> macOS 26 yet (see [Compatibility](#compatibility)).
 
 It adds a single **button** (a chevron) to the menu bar. Click it to collapse, and every icon to
 its left disappears. Click it again to bring them back. Everything to the right of the button
@@ -10,7 +15,7 @@ its left disappears. Click it again to bring them back. Everything to the right 
 
 - One-click collapse/expand with an animated chevron
 - Auto-hide after 5, 10, 30 or 60 seconds once the pointer leaves the menu bar
-- Four icon styles: native double chevron, chevron, arrow, eye
+- Eight icon styles: native double chevron, chevron, circled chevron, arrow, eye, dots, dot, lock
 - Icons stay visible while Settings is open so they are easy to rearrange
 - Launch at login
 - Right-click (or Control-click) the button for Settings and Quit

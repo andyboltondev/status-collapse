@@ -6,7 +6,7 @@ import Symbols
 /// How the collapse button is drawn. `native` matches the double chevron macOS itself uses for
 /// its menu bar overflow control.
 enum IconStyle: String, CaseIterable, Identifiable {
-    case native, chevron, arrow, eye
+    case native, chevron, circleChevron, arrow, eye, dots, dot, lock
 
     var id: String { rawValue }
 
@@ -16,6 +16,10 @@ enum IconStyle: String, CaseIterable, Identifiable {
         case .chevron: "Chevron"
         case .arrow: "Arrow"
         case .eye: "Eye"
+        case .circleChevron: "Circled chevron"
+        case .dots: "Dots"
+        case .dot: "Dot"
+        case .lock: "Lock"
         }
     }
 
@@ -26,6 +30,10 @@ enum IconStyle: String, CaseIterable, Identifiable {
         case .chevron: collapsed ? "chevron.left" : "chevron.right"
         case .arrow: collapsed ? "arrow.left" : "arrow.right"
         case .eye: collapsed ? "eye.slash" : "eye"
+        case .circleChevron: collapsed ? "chevron.left.circle.fill" : "chevron.right.circle"
+        case .dots: collapsed ? "ellipsis.circle.fill" : "ellipsis.circle"
+        case .dot: collapsed ? "circle.fill" : "circle"
+        case .lock: collapsed ? "lock.fill" : "lock.open.fill"
         }
     }
 }
