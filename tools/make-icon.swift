@@ -1,4 +1,5 @@
-// Renders Resources/AppIcon.icns. Run: swift tools/make-icon.swift
+// Renders the icon into build/AppIcon.iconset, then converts it to Resources/AppIcon.icns.
+// Run from the repository root: swift tools/make-icon.swift
 import AppKit
 
 let top = NSColor(srgbRed: 0.18, green: 0.83, blue: 0.75, alpha: 1)    // teal
@@ -43,3 +44,8 @@ for base in [16, 32, 128, 256, 512] {
     try! render(base).write(to: URL(fileURLWithPath: "\(set)/icon_\(base)x\(base).png"))
     try! render(base * 2).write(to: URL(fileURLWithPath: "\(set)/icon_\(base)x\(base)@2x.png"))
 }
+
+let iconutil = try! Process.run(URL(fileURLWithPath: "/usr/bin/iconutil"),
+                                arguments: ["--convert", "icns", "--output", "Resources/AppIcon.icns", set])
+iconutil.waitUntilExit()
+exit(iconutil.terminationStatus)

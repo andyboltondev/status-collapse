@@ -11,8 +11,14 @@ permissions:
 jobs:
   release:
     runs-on: macos-26
+    # A hung Finder script would otherwise hold a macOS runner for the 6 hour default.
+    timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v7
+      # Actions are pinned to commit SHAs because tags can be moved; the comment is the version.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # Nothing here pushes, so don't leave the token in .git/config for later steps.
+          persist-credentials: false
 
       - name: Set version from tag
         if: startsWith(github.ref, 'refs/tags/v')
@@ -20,16 +26,34 @@ jobs:
           VERSION="${GITHUB_REF_NAME#v}"
           /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString $VERSION" Resources/Info.plist
 
-      - name: Build app and DMG
+      - name: Build apps and DMGs
         run: ./tools/make-dmg.sh
 
-      - uses: actions/upload-artifact@v7
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: StatusCollapse-dmg
+          name: StatusCollapse-dmgs
           path: build/*.dmg
 
       - name: Publish release
         if: startsWith(github.ref, 'refs/tags/v')
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release create "$GITHUB_REF_NAME" build/*.dmg --title "$GITHUB_REF_NAME" --generate-notes
+          # Shown above the generated changelog. The app isn't notarized (that needs a paid Apple
+          # Developer account), so macOS blocks its first launch until it's allowed.
+          NOTES: |
+            ## Downloads
+
+            - **Universal**: runs on any Mac. Pick this if you're unsure.
+            - **Apple silicon**: Macs with an M-series chip.
+            - **Intel**: Intel Macs.
+
+            Requires macOS 26 or later.
+
+            ## First launch
+
+            StatusCollapse isn't notarized by Apple, so macOS blocks it the first time you open it:
+
+            1. Drag StatusCollapse to Applications and open it. When macOS says it can't verify the app, click **Done**.
+            2. Open **System Settings › Privacy & Security** and click **Open Anyway** next to the message about StatusCollapse.
+            3. Confirm with **Open Anyway** and your password. This is only needed once.
+        run: gh release create "$GITHUB_REF_NAME" build/*.dmg --title "$GITHUB_REF_NAME" --generate-notes --notes "$NOTES"

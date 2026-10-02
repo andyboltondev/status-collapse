@@ -1,0 +1,12 @@
+# Opens a pull request when the GitHub Actions used by the workflows have new releases, updating
+# the pinned commit SHAs together with their version comments.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    # One pull request for all action updates rather than one per action.
+    groups:
+      actions:
+        patterns: ["*"]
