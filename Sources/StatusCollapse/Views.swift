@@ -78,7 +78,7 @@ private struct WizardView: View {
             Text("You're all set").font(.title2.bold())
             Text("Click the \(Image(systemName: controller.iconStyle.symbol(collapsed: false))) button to hide or show icons. Right-click it for Settings and Quit.")
             Toggle("Open at login", isOn: Binding(
-                get: { controller.launchAtLogin }, set: controller.setLaunchAtLogin))
+                get: { controller.launchAtLogin }, set: { controller.setLaunchAtLogin($0) }))
             if let error = controller.launchError {
                 Text(error).font(.callout).foregroundStyle(.red)
             }
@@ -122,7 +122,7 @@ private struct SettingsView: View {
                 row("Open at login", detail: "Starts StatusCollapse when you sign in.",
                     help: "Launch automatically at login") {
                     Toggle("Open at login", isOn: Binding(
-                        get: { controller.launchAtLogin }, set: controller.setLaunchAtLogin))
+                        get: { controller.launchAtLogin }, set: { controller.setLaunchAtLogin($0) }))
                         .toggleStyle(.switch)
                 }
                 if let error = controller.launchError {
