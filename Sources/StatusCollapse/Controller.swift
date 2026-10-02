@@ -42,20 +42,34 @@ enum IconStyle: String, CaseIterable, Identifiable {
 @MainActor
 @Observable
 final class Controller {
+    /// Auto-hide delays offered in settings, in seconds; 0 turns auto-hide off.
     static let autoHideChoices = [0, 5, 10, 30, 60]
     /// Bumped when setup gains steps existing users need to see (v3: no divider, everything left
     /// of the button hides).
     static let setupKey = "setupCompleteV3"
 
+    /// UserDefaults keys, kept in one place so a typo can't silently split a setting in two.
+    private enum Key {
+        static let collapsed = "collapsed"
+        static let autoHideSeconds = "autoHideSeconds"
+        static let iconStyle = "iconStyle"
+        static let layoutVersion = "layoutVersion"
+        static let rolesSwapped = "rolesSwapped"
+    }
+
     private(set) var isCollapsed: Bool
     var autoHideSeconds: Int {
-        didSet { defaults.set(autoHideSeconds, forKey: "autoHideSeconds"); updateAutoHide() }
+        didSet { defaults.set(autoHideSeconds, forKey: Key.autoHideSeconds); updateAutoHide() }
     }
+    /// The status the system reports, re-read whenever settings open since it can also be
+    /// changed in System Settings.
     private(set) var launchAtLogin = SMAppService.mainApp.status == .enabled
-    var launchError: String?
+    /// Why the last login item change failed, shown under the toggle.
+    private(set) var launchError: String?
     var iconStyle: IconStyle {
         didSet {
-            defaults.set(iconStyle.rawValue, forKey: "iconStyle")
+            defaults.set(iconStyle.rawValue, forKey: Key.iconStyle)
+            // The placeholder sets the item's width, which depends on the style's glyphs.
             button?.button?.image = Self.placeholder(for: iconStyle)
             render()
         }
@@ -68,17 +82,19 @@ final class Controller {
     @ObservationIgnored private let glyphView = GlyphView()
     /// Only exists while collapsed.
     @ObservationIgnored private var hider: NSStatusItem?
+    /// The hide that follows the start of a collapse animation; see `hideDelay`.
     @ObservationIgnored private var hideTask: Task<Void, Never>?
     @ObservationIgnored private var screenObserver: NSObjectProtocol?
     @ObservationIgnored private var autoHideTask: Task<Void, Never>?
     /// Whether to hide the icons again when the settings window closes; nil while it is closed.
     @ObservationIgnored private var collapseAfterSettings: Bool?
     /// Autosave names are versioned so "Reset Layout" can discard the saved position.
-    @ObservationIgnored private var layoutVersion: Int { defaults.integer(forKey: "layoutVersion") }
+    private var layoutVersion: Int { defaults.integer(forKey: Key.layoutVersion) }
     /// Older versions could swap the button with their divider, so the button may own that name.
-    @ObservationIgnored private var buttonName: String {
-        (defaults.bool(forKey: "rolesSwapped") ? "divider" : "button") + "\(layoutVersion)"
+    private var buttonName: String {
+        (defaults.bool(forKey: Key.rolesSwapped) ? "divider" : "button") + "\(layoutVersion)"
     }
+    /// Set by the app delegate to open the settings window.
     @ObservationIgnored var openSettings: () -> Void = {}
 
     /// macOS fades the icons in over ~200 ms but out over ~150 ms, most of it up front, and that
@@ -91,9 +107,10 @@ final class Controller {
     private static let autoHideTick = Duration.milliseconds(500)
 
     init() {
-        isCollapsed = defaults.bool(forKey: "collapsed")
-        autoHideSeconds = defaults.integer(forKey: "autoHideSeconds")
-        iconStyle = IconStyle(rawValue: defaults.string(forKey: "iconStyle") ?? "") ?? .native
+        Self.migrateLegacyDefaults(into: defaults)
+        isCollapsed = defaults.bool(forKey: Key.collapsed)
+        autoHideSeconds = defaults.integer(forKey: Key.autoHideSeconds)
+        iconStyle = IconStyle(rawValue: defaults.string(forKey: Key.iconStyle) ?? "") ?? .native
 
         createButton()
         render()
@@ -107,12 +124,27 @@ final class Controller {
         }
     }
 
+    /// 1.0.0 shipped as com.example.StatusCollapse. Its icon style and auto-hide delay carry over,
+    /// then its preferences are removed. Setup runs again (its completion isn't copied), since the
+    /// button's saved menu bar position may not survive the change of bundle ID.
+    private static func migrateLegacyDefaults(into defaults: UserDefaults) {
+        let legacyDomain = "com.example.StatusCollapse"
+        // A removed domain reads back as empty rather than nil.
+        guard let legacy = defaults.persistentDomain(forName: legacyDomain), !legacy.isEmpty else { return }
+        for key in [Key.iconStyle, Key.autoHideSeconds] where defaults.object(forKey: key) == nil {
+            defaults.set(legacy[key], forKey: key)
+        }
+        defaults.removePersistentDomain(forName: legacyDomain)
+    }
+
     // MARK: Collapse
 
+    /// Collapses or expands, animated. Asking for the current state still re-evaluates auto-hide,
+    /// which is how opening the settings window pauses it.
     func setCollapsed(_ collapsed: Bool) {
         guard collapsed != isCollapsed else { return updateAutoHide() }
         isCollapsed = collapsed
-        defaults.set(collapsed, forKey: "collapsed")
+        defaults.set(collapsed, forKey: Key.collapsed)
         render(animated: true)
         updateAutoHide()
     }
@@ -120,6 +152,7 @@ final class Controller {
     /// Icons stay shown while the settings window is open so they're easy to arrange; closing it
     /// puts back the state it was opened from.
     func settingsWillOpen() {
+        launchAtLogin = SMAppService.mainApp.status == .enabled
         guard collapseAfterSettings == nil else { return }
         collapseAfterSettings = isCollapsed
         setCollapsed(false)
@@ -131,17 +164,21 @@ final class Controller {
         if collapse { setCollapsed(true) } else { updateAutoHide() }
     }
 
+    /// Recreates the button under a new autosave name, discarding its saved position, so a button
+    /// that went missing comes back. Icons are left shown.
     func resetLayout() {
-        defaults.set(layoutVersion + 1, forKey: "layoutVersion")
-        defaults.set(false, forKey: "rolesSwapped")
+        defaults.set(layoutVersion + 1, forKey: Key.layoutVersion)
+        defaults.set(false, forKey: Key.rolesSwapped)
         isCollapsed = false
-        defaults.set(false, forKey: "collapsed")
+        defaults.set(false, forKey: Key.collapsed)
         removeHider()
         if let button { NSStatusBar.system.removeStatusItem(button) }
         createButton()
         render()
     }
 
+    /// Brings the tooltip, glyph and hider in line with `isCollapsed`. Animated changes play the
+    /// glyph transition, and a collapse hides the icons a beat after it starts.
     private func render(animated: Bool = false) {
         guard let button = button?.button else { return }
         let label = isCollapsed ? "Show hidden menu bar icons" : "Hide menu bar icons"
@@ -176,12 +213,13 @@ final class Controller {
     /// macOS 27 ejects any item whose window (length plus 16 pt of chrome) reaches half the width
     /// of the narrowest display, which would un-hide everything. Just under that, the hider is
     /// too wide to fit or to be parked behind the system overflow chevron, so macOS hides it and
-    /// every item to its left, with or without a notch.
+    /// every item to its left. Measured on a notched display; displays without one are untested.
     private var collapsedLength: CGFloat {
         let narrowest = NSScreen.screens.map(\.frame.width).min() ?? 1440
         return (narrowest / 2 - 17).rounded(.down)
     }
 
+    /// Adds the button under its autosave name, which makes macOS put it back where it was saved.
     private func createButton() {
         let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         item.autosaveName = buttonName
@@ -237,18 +275,19 @@ final class Controller {
     /// Auto-hide counts down only while the pointer is away from the menu bar: being over it
     /// restarts the countdown. The pointer is read twice a second while the icons are shown, with
     /// slack so the system can coalesce the wake-ups, rather than watching every mouse movement.
+    /// Coalesced wake-ups can arrive late, so the countdown is timed against the clock rather
+    /// than by counting them.
     private func updateAutoHide() {
         autoHideTask?.cancel()
         guard !isCollapsed, autoHideSeconds > 0, collapseAfterSettings == nil else { return }
-        let total = Duration.seconds(autoHideSeconds), tick = Self.autoHideTick
+        let delay = Duration.seconds(autoHideSeconds), tick = Self.autoHideTick
         autoHideTask = Task { [weak self] in
-            var remaining = total
+            var deadline = ContinuousClock.now + delay
             while true {
                 try? await Task.sleep(for: tick, tolerance: tick / 2)
                 if Task.isCancelled { return }
-                if Self.pointerInMenuBar { remaining = total; continue }
-                remaining -= tick
-                guard remaining <= .zero else { continue }
+                if Self.pointerInMenuBar { deadline = ContinuousClock.now + delay; continue }
+                guard ContinuousClock.now >= deadline else { continue }
                 // Listing windows costs more than reading the pointer, so menus are only checked
                 // once time is up. One left open still counts as use: wait it out, then count
                 // down afresh rather than snapping shut the moment it closes.
@@ -256,7 +295,7 @@ final class Controller {
                 while !Task.isCancelled, Self.menuIsOpen {
                     try? await Task.sleep(for: tick, tolerance: tick / 2)
                 }
-                remaining = total
+                deadline = ContinuousClock.now + delay
             }
             self?.setCollapsed(true)
         }
@@ -271,7 +310,8 @@ final class Controller {
         return mouse.y >= screen.frame.maxY - barHeight
     }
 
-    /// True while any app has a menu open.
+    /// True while any app has a menu open. Only window layers are read, which needs no Screen
+    /// Recording permission.
     private static var menuIsOpen: Bool {
         let menuLevel = Int(CGWindowLevelForKey(.popUpMenuWindow))
         let windows = CGWindowListCopyWindowInfo([.optionOnScreenOnly, .excludeDesktopElements], kCGNullWindowID)
@@ -281,6 +321,8 @@ final class Controller {
 
     // MARK: Login item
 
+    /// Registers or unregisters the app as a login item, then shows the status the system
+    /// reports, so the toggle never claims a change that didn't happen.
     func setLaunchAtLogin(_ enabled: Bool) {
         do {
             if enabled { try SMAppService.mainApp.register() } else { try SMAppService.mainApp.unregister() }
@@ -293,8 +335,12 @@ final class Controller {
 
     // MARK: Status item interaction
 
+    /// Left-click toggles; right-click or Control-click opens the menu.
     @objc private func statusItemClicked(_ sender: NSStatusBarButton) {
-        guard let event = NSApp.currentEvent else { return }
+        // A press from VoiceOver or keyboard navigation has no mouse-down behind it; it toggles.
+        guard let event = NSApp.currentEvent, [.leftMouseDown, .rightMouseDown].contains(event.type) else {
+            return setCollapsed(!isCollapsed)
+        }
         if event.type == .rightMouseDown || event.modifierFlags.contains(.control) {
             showMenu(from: sender)
         } else if !event.modifierFlags.contains(.command) {

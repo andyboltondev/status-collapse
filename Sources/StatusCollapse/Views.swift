@@ -16,6 +16,8 @@ struct RootView: View {
 
 // MARK: - Wizard
 
+/// First-run walkthrough: welcome, arranging icons, then the login item. Shown until finished,
+/// and again from "Run Setup".
 private struct WizardView: View {
     let controller: Controller
     let finish: () -> Void
@@ -88,6 +90,7 @@ private struct WizardView: View {
 
 // MARK: - Settings
 
+/// The settings window's content once setup is finished.
 private struct SettingsView: View {
     @Bindable var controller: Controller
     let rerunSetup: () -> Void
@@ -179,6 +182,7 @@ private struct SettingsView: View {
         }
     }
 
+    /// A titled, rounded group of settings.
     private func card<Content: View>(_ title: String, systemImage: String,
                                      @ViewBuilder content: () -> Content) -> some View {
         VStack(alignment: .leading, spacing: 6) {
@@ -193,6 +197,7 @@ private struct SettingsView: View {
         }
     }
 
+    /// A numbered instruction.
     private func step(_ number: Int, _ text: LocalizedStringKey) -> some View {
         HStack(alignment: .firstTextBaseline, spacing: 8) {
             Text("\(number)")
@@ -203,6 +208,7 @@ private struct SettingsView: View {
         }
     }
 
+    /// A setting: title and explanation on the left, its control on the right.
     private func row<Control: View>(_ title: String, detail: String, help: String,
                                     @ViewBuilder control: () -> Control) -> some View {
         HStack(alignment: .center) {
