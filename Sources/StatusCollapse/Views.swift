@@ -94,6 +94,7 @@ private struct WizardView: View {
 private struct SettingsView: View {
     @Bindable var controller: Controller
     let rerunSetup: () -> Void
+    @State private var showChangelog = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -151,7 +152,16 @@ private struct SettingsView: View {
             }
             VStack(spacing: 2) {
                 Text("Right-click the menu bar button for Settings and Quit.")
-                Text("Version \(Self.version) · Build: \(Self.build)")
+                Button { showChangelog.toggle() } label: {
+                    Text("Version \(Self.version) · Build: \(Self.build)")
+                }
+                .buttonStyle(.plain)
+                .help("Show what's new in this version")
+                .popover(isPresented: $showChangelog, arrowEdge: .top) {
+                    Text(Self.latestChanges)
+                        .font(.callout).textSelection(.enabled)
+                        .frame(width: 300, alignment: .leading).padding(14)
+                }
             }
             .font(.caption).foregroundStyle(.tertiary)
             .frame(maxWidth: .infinity)
@@ -163,6 +173,20 @@ private struct SettingsView: View {
 
     private static let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "?"
     private static let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "?"
+
+    /// The newest section of the bundled CHANGELOG.md, as markdown.
+    private static let latestChanges: AttributedString = {
+        let text = Bundle.main.url(forResource: "CHANGELOG", withExtension: "md")
+            .flatMap { try? String(contentsOf: $0, encoding: .utf8) } ?? ""
+        let section = text.components(separatedBy: "\n## ").dropFirst().first ?? ""
+        guard !section.isEmpty else { return AttributedString("No changelog available.") }
+        let lines = section.split(separator: "\n", omittingEmptySubsequences: true)
+        let title = "**\(lines[0])**"
+        let items = lines.dropFirst().map { $0.hasPrefix("- ") ? "•" + $0.dropFirst() : String($0) }
+        let body = ([title] + items).joined(separator: "\n")
+        return (try? AttributedString(markdown: body, options: .init(interpretedSyntax: .inlineOnlyPreservingWhitespace)))
+            ?? AttributedString(body)
+    }()
 
     private var header: some View {
         HStack(spacing: 12) {

@@ -94,6 +94,8 @@ final class Controller {
     @ObservationIgnored private var hideTask: Task<Void, Never>?
     @ObservationIgnored private var screenObserver: NSObjectProtocol?
     @ObservationIgnored private var autoHideTask: Task<Void, Never>?
+    /// Re-checks whether anything sits left of the button; see `updateDimming`.
+    @ObservationIgnored private var dimTask: Task<Void, Never>?
     /// Whether to hide the icons again when the settings window closes; nil while it is closed.
     @ObservationIgnored private var collapseAfterSettings: Bool?
     /// Autosave names are versioned so "Reset Layout" can discard the saved position.
@@ -113,6 +115,8 @@ final class Controller {
     private static let collapseSpeed = 1.0
     private static let hideDelay = Duration.milliseconds(50)
     private static let autoHideTick = Duration.milliseconds(500)
+    private static let dimTick = Duration.seconds(1)
+    private static let dimmedAlpha: CGFloat = 0.35
 
     init() {
         Self.migrateLegacyDefaults(into: defaults)
@@ -123,6 +127,7 @@ final class Controller {
         createButton()
         render()
         updateAutoHide()
+        startDimming()
 
         // The collapsed width depends on the displays attached.
         screenObserver = NotificationCenter.default.addObserver(
@@ -215,6 +220,46 @@ final class Controller {
                                      options: .speed(isCollapsed ? Self.collapseSpeed : Self.expandSpeed))
         } else {
             glyphView.image = glyph
+        }
+        updateDimming()
+    }
+
+    // MARK: Dimming
+
+    /// Items to the left of the button can't be seen from here being added or removed (the button
+    /// doesn't move when they do), so the menu bar is checked once a second.
+    private func startDimming() {
+        dimTask = Task { [weak self] in
+            while !Task.isCancelled {
+                try? await Task.sleep(for: Self.dimTick, tolerance: Self.dimTick / 2)
+                self?.updateDimming()
+            }
+        }
+    }
+
+    /// Dims the glyph, like a disabled control, while the icons are shown and nothing is left of
+    /// the button to hide. The button still works: it can be dragged and right-clicked. While
+    /// collapsed, the hider's own state says nothing about what it hides, so it stays normal.
+    private func updateDimming() {
+        let dim = !isCollapsed && !hasItemsToHide
+        glyphView.alphaValue = dim ? Self.dimmedAlpha : 1
+    }
+
+    /// Whether any other status item is on screen to the left of the button, on the same bar.
+    private var hasItemsToHide: Bool {
+        guard let window = button?.button?.window, window.windowNumber > 0 else { return true }
+        let statusLevel = Int(CGWindowLevelForKey(.statusWindow))
+        let infos = CGWindowListCopyWindowInfo([.optionOnScreenOnly], kCGNullWindowID) as? [[String: Any]] ?? []
+        func bounds(_ info: [String: Any]) -> CGRect? {
+            (info[kCGWindowBounds as String] as? NSDictionary).flatMap { CGRect(dictionaryRepresentation: $0 as CFDictionary) }
+        }
+        guard let mine = infos.first(where: { $0[kCGWindowNumber as String] as? Int == window.windowNumber })
+            .flatMap(bounds) else { return true }
+        return infos.contains { info in
+            guard info[kCGWindowLayer as String] as? Int == statusLevel,
+                  info[kCGWindowOwnerPID as String] as? Int32 != ProcessInfo.processInfo.processIdentifier,
+                  let other = bounds(info) else { return false }
+            return abs(other.minY - mine.minY) < 4 && other.maxX <= mine.minX + 1
         }
     }
 

@@ -4,8 +4,8 @@ An easy to use, simple, lightweight and minimal menu bar icon collapsing tool fo
 button hides and shows your menu bar icons with a single click, with no clutter and nothing else
 to learn.
 
-> **Tested on macOS 27 only.** It is built for macOS 26 and later, but has not been tested on
-> macOS 26 yet (see [Compatibility](#compatibility)).
+> **Recommended for macOS 27.** That is the only version it has been tested on. It is built for
+> macOS 26 and later, but has not been tested on macOS 26 yet (see [Compatibility](#compatibility)).
 
 It adds a single **button** (a chevron) to the menu bar. Click it to collapse, and every icon to
 its left disappears. Click it again to bring them back. Everything to the right of the button
@@ -86,6 +86,13 @@ after system updates.
   it adapts to any resolution or scaling, and it is recalculated whenever displays change. Only a
   notched MacBook display has been tested. Displays without a notch, external displays, and
   setups mixing displays of different widths have not.
+
+## Changelog and license
+
+See [CHANGELOG.md](CHANGELOG.md); the latest entry is also shown in Settings when you click the
+version line. StatusCollapse is open source under the [MIT License](LICENSE): you may use and
+modify it freely, but you must keep the copyright notice and license text in any copy or
+substantial portion.
 
 ## Project layout
 
