@@ -10,7 +10,7 @@ struct ReleaseInfo: Equatable {
 /// version), and nothing is downloaded or installed: the user opens the release page.
 enum UpdateCheck {
     /// The one place the repository is named, so renaming it is a one-line change.
-    static let repository = "andyboltondev/status-menu-collapse"
+    static let repository = "andyboltondev/status-collapse"
     static let endpoint = URL(string: "https://api.github.com/repos/\(repository)/releases/latest")!
 
     /// Whether `remote` is a higher dotted version than `local`. Missing parts count as zero and

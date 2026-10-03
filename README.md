@@ -35,7 +35,7 @@ its left disappears. Click it again to bring them back. Everything to the right 
 
 ## Install
 
-Download the DMG from the [releases page](https://github.com/andyboltondev/status-menu-collapse/releases),
+Download the DMG from the [releases page](https://github.com/andyboltondev/status-collapse/releases),
 open it and drag StatusCollapse to Applications. StatusCollapse isn't notarized by Apple (that
 needs a paid Apple Developer account), so macOS blocks it the first time you open it:
 
