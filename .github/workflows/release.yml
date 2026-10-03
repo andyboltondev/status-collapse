@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   release:
-    runs-on: macos-26
+    runs-on: macos-27
     # A hung Finder script would otherwise hold a macOS runner for the 6 hour default.
     timeout-minutes: 30
     steps:
@@ -26,8 +26,14 @@ jobs:
           VERSION="${GITHUB_REF_NAME#v}"
           /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString $VERSION" Resources/Info.plist
 
-      - name: Build apps and DMGs
+      - name: Test
+        run: swift test
+
+      - name: Build app and DMG
         run: ./tools/make-dmg.sh
+
+      - name: Verify build
+        run: ./tools/verify-build.sh
 
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
@@ -41,13 +47,7 @@ jobs:
           # Shown above the generated changelog. The app isn't notarized (that needs a paid Apple
           # Developer account), so macOS blocks its first launch until it's allowed.
           NOTES: |
-            ## Downloads
-
-            - **Universal**: runs on any Mac. Pick this if you're unsure.
-            - **Apple silicon**: Macs with an M-series chip.
-            - **Intel**: Intel Macs.
-
-            Requires macOS 26 or later.
+            Requires macOS 27 or later, on a Mac with Apple silicon.
 
             ## First launch
 

@@ -172,13 +172,15 @@ final class Controller {
         static let hotkeyEnabled = "hotkeyEnabled"
         static let hotkey = "hotkey"
         static let language = "language"
+        static let updateChecks = "updateChecks"
+        static let lastUpdateCheck = "lastUpdateCheck"
         static let layoutVersion = "layoutVersion"
         static let rolesSwapped = "rolesSwapped"
 
         /// What export and import carry: the preferences, not the state (collapsed, layout).
         static let portable = [autoHideSeconds, autoHidePower, iconStyle, iconSize, iconWeight, customCollapsed,
                                customExpanded, collapsedOpacity, buttonVisibility, hoverReveal, collapseOnLock,
-                               collapseOnMirroring, hotkeyEnabled, hotkey, language]
+                               collapseOnMirroring, hotkeyEnabled, hotkey, language, updateChecks]
     }
 
     /// Set once launching finishes, so loading settings doesn't act on a button that isn't there yet.
@@ -253,6 +255,20 @@ final class Controller {
             render()
         }
     }
+    /// Whether to look for a newer release at launch, at most once a day.
+    var updateChecks = true {
+        didSet {
+            guard ready else { return }
+            defaults.set(updateChecks, forKey: Key.updateChecks)
+            if updateChecks { checkForUpdatesIfDue() }
+        }
+    }
+    enum UpdateStatus: Equatable {
+        case unknown, checking, upToDate, failed
+        case available(ReleaseInfo)
+    }
+    private(set) var updateStatus = UpdateStatus.unknown
+    @ObservationIgnored private var updateTask: Task<Void, Never>?
     /// The settings tab showing, so the window rebuilt for a new language stays on it.
     var settingsTab = 0
     /// True if the system refused the hotkey, because something else already uses it.
@@ -310,7 +326,6 @@ final class Controller {
     private static let hoverHideSeconds = 2
 
     init() {
-        Self.migrateLegacyDefaults(into: defaults)
         isCollapsed = defaults.bool(forKey: Key.collapsed)
         loadSettings()
         Strings.use(language)
@@ -323,19 +338,7 @@ final class Controller {
         startDimming()
         applyHotKey()
         observeSystem()
-    }
-
-    /// 1.0.0 shipped as com.example.StatusCollapse. Its icon style and auto-hide delay carry over,
-    /// then its preferences are removed. Setup runs again (its completion isn't copied), since the
-    /// button's saved menu bar position may not survive the change of bundle ID.
-    private static func migrateLegacyDefaults(into defaults: UserDefaults) {
-        let legacyDomain = "com.example.StatusCollapse"
-        // A removed domain reads back as empty rather than nil.
-        guard let legacy = defaults.persistentDomain(forName: legacyDomain), !legacy.isEmpty else { return }
-        for key in [Key.iconStyle, Key.autoHideSeconds] where defaults.object(forKey: key) == nil {
-            defaults.set(legacy[key], forKey: key)
-        }
-        defaults.removePersistentDomain(forName: legacyDomain)
+        checkForUpdatesIfDue()
     }
 
     /// Reads every preference, keeping the default for anything missing or out of range.
@@ -359,6 +362,7 @@ final class Controller {
         buttonVisibility = defaults.string(forKey: Key.buttonVisibility) == "hidden" ? .whenExpanded
             : raw(Key.buttonVisibility, .always)
         hotkeyEnabled = flag(Key.hotkeyEnabled, true)
+        updateChecks = flag(Key.updateChecks, true)
         let savedKey = HotKeyCombo(plist: defaults.object(forKey: Key.hotkey))
         hotkey = savedKey.flatMap { HotKeyCombo.retired.contains($0) ? nil : $0 } ?? .standard
         let saved = defaults.string(forKey: Key.language) ?? AppLanguage.system
@@ -368,6 +372,31 @@ final class Controller {
     /// Custom button text is limited to what fits a menu bar item.
     private static let customTextLimit = 4
     private static func clipped(_ text: String) -> String { String(text.prefix(customTextLimit)) }
+
+    // MARK: Updates
+
+    static let currentVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "0"
+
+    private func checkForUpdatesIfDue() {
+        let last = defaults.object(forKey: Key.lastUpdateCheck) as? Date ?? .distantPast
+        guard updateChecks, Date().timeIntervalSince(last) > 24 * 3600 else { return }
+        checkForUpdates()
+    }
+
+    func checkForUpdates() {
+        guard updateStatus != .checking else { return }
+        updateStatus = .checking
+        updateTask = Task { [weak self] in
+            let outcome = await UpdateCheck.check(currentVersion: Self.currentVersion)
+            guard let self else { return }
+            if outcome != .failed { defaults.set(Date(), forKey: Key.lastUpdateCheck) }
+            switch outcome {
+            case .upToDate: updateStatus = .upToDate
+            case .available(let release): updateStatus = .available(release)
+            case .failed: updateStatus = .failed
+            }
+        }
+    }
 
     // MARK: Collapse
 

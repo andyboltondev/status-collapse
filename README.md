@@ -4,8 +4,8 @@ An easy to use, simple, lightweight and minimal menu bar icon collapsing tool fo
 button hides and shows your menu bar icons with a single click, with no clutter and nothing else
 to learn.
 
-> **Recommended for macOS 27.** That is the only version it has been tested on. It is built for
-> macOS 26 and later, but has not been tested on macOS 26 yet (see [Compatibility](#compatibility)).
+> **Requires macOS 27 or later, on Apple silicon.** macOS 27 is the only version it is built for and
+> tested on (see [Compatibility](#compatibility)).
 
 It adds a single **button** (a chevron) to the menu bar. Click it to collapse, and every icon to
 its left disappears. Click it again to bring them back. Everything to the right of the button
@@ -20,23 +20,20 @@ its left disappears. Click it again to bring them back. Everything to the right 
 - Hides when the Mac locks or sleeps, or when a display is mirrored
 - Fade the button when icons are hidden, or show it only while icons are shown, revealing them with the shortcut
 - Export and import settings
+- Optional daily check for a newer release (it only links to it; nothing is downloaded)
 - 36 languages, defaulting to British English and following macOS
 - Icons stay visible while Settings is open so they are easy to rearrange
 - Launch at login
 
 ## Requirements
 
-- macOS 26 or later, on Apple silicon or Intel (see [Compatibility](#compatibility))
-- To build: Swift 6.2 toolchain (Xcode 26 or later)
+- macOS 27 or later on a Mac with Apple silicon (macOS 27 does not run on Intel Macs)
+- To build: Xcode 27 or later (Swift 6.4)
 
 ## Install
 
-Download a DMG from the [releases page](https://github.com/andyboltondev/status-menu-collapse/releases):
-
-- **Universal** runs on any Mac. Pick this if you're unsure.
-- **Apple silicon** is for Macs with an M-series chip, **Intel** for Intel Macs.
-
-Open it and drag StatusCollapse to Applications. StatusCollapse isn't notarized by Apple (that
+Download the DMG from the [releases page](https://github.com/andyboltondev/status-menu-collapse/releases),
+open it and drag StatusCollapse to Applications. StatusCollapse isn't notarized by Apple (that
 needs a paid Apple Developer account), so macOS blocks it the first time you open it:
 
 1. Open StatusCollapse. When macOS says it can't verify the app, click **Done**.
@@ -44,23 +41,16 @@ needs a paid Apple Developer account), so macOS blocks it the first time you ope
    about StatusCollapse.
 3. Confirm with **Open Anyway** and your password. This is only needed once.
 
-### Upgrading from 1.0.0
-
-1.0.0 used a placeholder bundle identifier; later versions use `dev.andybolton.StatusCollapse`.
-The first launch keeps your icon style and auto-hide delay, but runs setup again, since macOS may
-not remember the button's position under the new identifier. Turn **Open at login** back on if
-you use it, and remove any old StatusCollapse entry left in System Settings › General › Login Items.
-
 ## Build and run
 
 ```bash
 ./build.sh
-open build/universal/StatusCollapse.app
+open build/StatusCollapse.app
 ```
 
-`build.sh` builds a universal release binary and wraps it, and its Apple silicon and Intel slices,
-in ad-hoc signed apps with the hardened runtime enabled: `build/universal/`, `build/apple-silicon/`
-and `build/intel/`. `./tools/make-dmg.sh` packages each as a drag-to-Applications DMG in `build/`.
+`build.sh` builds an Apple silicon release binary and wraps it in an ad-hoc signed app with the
+hardened runtime enabled: `build/StatusCollapse.app`. `./tools/make-dmg.sh` packages it as a
+drag-to-Applications DMG in `build/`.
 
 Quit any installed copy before opening a build, so the two don't both add a button.
 
@@ -83,13 +73,18 @@ after system updates.
 
 ## Compatibility
 
-- **macOS 26 and 27.** The app is built for macOS 26 and later, and the compiler checks that every
-  API it uses exists on macOS 26. The hiding technique, however, was worked out and tested on
-  macOS 27 only; it has not been tested on macOS 26 yet.
+- **macOS 27 only.** The app requires macOS 27 and uses its menu bar behavior. The hiding technique
+  was worked out and tested on macOS 27, and macOS 27 runs on Apple silicon only, so there is no
+  Intel build.
 - **Displays.** The invisible item's width is worked out in points from the narrowest display, so
   it adapts to any resolution or scaling, and it is recalculated whenever displays change. Only a
   notched MacBook display has been tested. Displays without a notch, external displays, and
   setups mixing displays of different widths have not.
+
+## Tests
+
+`swift test` runs the unit tests. The release workflow runs them, builds the apps, then runs
+`tools/verify-build.sh`, which checks the architecture, signature, version, minimum macOS, changelog and languages.
 
 ## Changelog and license
 
@@ -106,7 +101,7 @@ restricts commercial use.
 - `Sources/StatusCollapse/Controller.swift`: status items, collapse logic, auto-hide
 - `Sources/StatusCollapse/Views.swift`, `AppDelegate.swift`, `main.swift`: settings UI and app setup
 - `Resources/Info.plist`: app bundle metadata (menu bar only, no Dock icon)
-- `build.sh`: builds the universal, Apple silicon and Intel apps
+- `build.sh`: builds the Apple silicon app
 - `tools/`: DMG packaging (`make-dmg.sh`, `make-dmg-background.swift`) and the icon renderer (`make-icon.swift`)
-- `.github/workflows/release.yml`: builds the DMGs and publishes a GitHub release for `v*` tags
+- `.github/workflows/release.yml`: builds the DMG and publishes a GitHub release for `v*` tags
 - `.github/dependabot.yml`: weekly pull requests that update the pinned GitHub Actions

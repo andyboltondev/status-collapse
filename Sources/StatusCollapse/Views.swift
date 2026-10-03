@@ -114,6 +114,36 @@ private struct WizardView: View {
     }
 }
 
+// MARK: - Window sizing
+
+private struct TabHeightsKey: PreferenceKey {
+    static let defaultValue: [Int: CGFloat] = [:]
+    static func reduce(value: inout [Int: CGFloat], nextValue: () -> [Int: CGFloat]) {
+        value.merge(nextValue()) { $1 }
+    }
+}
+
+/// Resizes the hosting window to `height` when it first becomes known and whenever it changes
+/// (a longer translation, say), so the tabs fit without scrolling. Resizing it by hand still works.
+private struct WindowSizer: NSViewRepresentable {
+    let height: CGFloat?
+
+    final class Coordinator { var applied: CGFloat? }
+    func makeCoordinator() -> Coordinator { Coordinator() }
+    func makeNSView(context: Context) -> NSView { NSView() }
+
+    func updateNSView(_ view: NSView, context: Context) {
+        guard let height, height != context.coordinator.applied else { return }
+        context.coordinator.applied = height
+        DispatchQueue.main.async {
+            guard let window = view.window else { return }
+            var size = window.contentLayoutRect.size
+            size.height = height
+            window.setContentSize(size)
+        }
+    }
+}
+
 // MARK: - Settings
 
 /// The settings window's content once setup is finished.
@@ -121,6 +151,29 @@ private struct SettingsView: View {
     @Bindable var controller: Controller
     let rerunSetup: () -> Void
     @State private var showChangelog = false
+
+    /// Natural height of each tab's content, the height of the window outside the tab area, and
+    /// the tab area's width, all measured so the window can be sized to show a tab without scrolling.
+    @State private var tabHeights: [Int: CGFloat] = [:]
+
+    /// Everything in the window beyond the header, footer and a tab's content: the window padding,
+    /// the gaps between the parts, and the tab control's own bar and margins.
+    private static let fixedChrome: CGFloat = 40 + 24 + 30
+    /// Widths the header, footer and tab content are laid out at, for measuring them.
+    private static let outerWidth: CGFloat = 500
+    private static let innerWidth: CGFloat = 476
+
+    private static let minimumSize = CGSize(width: 540, height: 380)
+    /// The window opens as tall as its content needs, but no taller than this share of the screen.
+    private static let screenShare = 0.8
+
+    /// The window height that shows the tallest tab in full, or nil until it has been measured.
+    private var fittingHeight: CGFloat? {
+        guard tabHeights.count == 5, let tallest = (0...2).compactMap({ tabHeights[$0] }).max() else { return nil }
+        let chrome = tabHeights[3, default: 0] + tabHeights[4, default: 0] + Self.fixedChrome
+        let screen = NSScreen.main?.visibleFrame.height ?? 900
+        return max(Self.minimumSize.height, min(chrome + tallest, (screen * Self.screenShare).rounded(.down)))
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -133,7 +186,11 @@ private struct SettingsView: View {
             footer
         }
         .padding(20)
-        .frame(width: 540, height: 660)
+        .frame(minWidth: Self.minimumSize.width, maxWidth: .infinity,
+               minHeight: Self.minimumSize.height, idealHeight: fittingHeight ?? 660, maxHeight: .infinity)
+        .background(alignment: .topLeading) { measurer }
+        .background(WindowSizer(height: fittingHeight))
+        .onPreferenceChange(TabHeightsKey.self) { tabHeights = $0 }
     }
 
     private func tab<Content: View>(@ViewBuilder _ content: () -> Content) -> some View {
@@ -141,6 +198,29 @@ private struct SettingsView: View {
             VStack(alignment: .leading, spacing: 16) { content() }
                 .padding(.vertical, 8).padding(.horizontal, 4)
         }
+        .scrollBounceBehavior(.basedOnSize)
+    }
+
+    /// Invisible copies of every tab at the visible tab's width, which only report their heights.
+    private var measurer: some View {
+        ZStack(alignment: .top) {
+            measured(0, menuBarTab, width: Self.innerWidth)
+            measured(1, behaviourTab, width: Self.innerWidth)
+            measured(2, generalTab, width: Self.innerWidth)
+            measured(3, header, width: Self.outerWidth)
+            measured(4, footer, width: Self.outerWidth)
+        }
+        .hidden().allowsHitTesting(false).accessibilityHidden(true)
+    }
+
+    private func measured<Content: View>(_ index: Int, _ content: Content, width: CGFloat) -> some View {
+        content
+            .padding(.vertical, index < 3 ? 8 : 0).padding(.horizontal, index < 3 ? 4 : 0)
+            .frame(width: width)
+            .fixedSize(horizontal: false, vertical: true)
+            .background(GeometryReader { proxy in
+                Color.clear.preference(key: TabHeightsKey.self, value: [index: proxy.size.height])
+            })
     }
 
     // MARK: Tabs
@@ -257,6 +337,16 @@ private struct SettingsView: View {
         }
     }
 
+    private var updateMessage: String {
+        switch controller.updateStatus {
+        case .unknown: L("Version %@", Controller.currentVersion)
+        case .checking: L("Checking…")
+        case .upToDate: L("You're up to date.")
+        case .failed: L("Couldn't check for updates.")
+        case .available: ""
+        }
+    }
+
     private var generalTab: some View {
         VStack(alignment: .leading, spacing: 16) {
             card(L("General"), systemImage: "gearshape") {
@@ -274,6 +364,26 @@ private struct SettingsView: View {
                         Text(L("System default")).tag(AppLanguage.system)
                         Divider()
                         ForEach(AppLanguage.all) { Text($0.name).tag($0.code) }
+                    }
+                }
+            }
+            card(L("Updates"), systemImage: "arrow.down.circle") {
+                row(L("Check for updates"), detail: L("Looks for a newer version once a day. Nothing is downloaded or installed.")) {
+                    Toggle(L("Check for updates"), isOn: $controller.updateChecks).toggleStyle(.switch)
+                }
+                HStack(spacing: 8) {
+                    switch controller.updateStatus {
+                    case .available(let release):
+                        Text(L("Version %@ is available.", release.version)).font(.callout)
+                        Spacer(minLength: 0)
+                        Button { NSWorkspace.shared.open(release.url) } label: {
+                            Label(L("View release"), systemImage: "arrow.up.right.square")
+                        }
+                    default:
+                        Text(updateMessage).font(.callout).foregroundStyle(.secondary)
+                        Spacer(minLength: 0)
+                        Button(L("Check now")) { controller.checkForUpdates() }
+                            .disabled(controller.updateStatus == .checking)
                     }
                 }
             }

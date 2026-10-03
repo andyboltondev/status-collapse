@@ -35,7 +35,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         if window == nil {
             let w = NSWindow(contentViewController: NSHostingController(rootView: RootView(controller: controller)))
             w.title = "StatusCollapse"
-            w.styleMask = [.titled, .closable]
+            w.styleMask = [.titled, .closable, .resizable]
             w.isReleasedWhenClosed = false
             w.delegate = self
             w.center()

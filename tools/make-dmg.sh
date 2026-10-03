@@ -1,12 +1,12 @@
 #!/bin/zsh
-# Builds the apps, then packages each as build/StatusCollapse-<version>-<variant>.dmg with a
-# drag-to-Applications layout. Images are made with `diskutil image` (macOS 26+), which replaces
-# the hdiutil verbs deprecated in macOS 27.
+# Builds the app, then packages it as build/StatusCollapse-<version>.dmg with a
+# drag-to-Applications layout. Images are made with `diskutil image`, which replaces the hdiutil
+# verbs deprecated in macOS 27.
 # Positioning icons drives Finder via AppleScript, so macOS may ask to allow automation the first time.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 ./build.sh
-VERSION=$(/usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" build/universal/StatusCollapse.app/Contents/Info.plist)
+VERSION=$(/usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" build/StatusCollapse.app/Contents/Info.plist)
 VOL=StatusCollapse
 RW=build/rw.dmg
 BACKGROUND=build/dmg-background.tiff
@@ -43,8 +43,8 @@ done
 
 swift tools/make-dmg-background.swift "$BACKGROUND"
 
-for variant in universal apple-silicon intel; do
-  DMG=build/StatusCollapse-$VERSION-$variant.dmg
+DMG=build/StatusCollapse-$VERSION.dmg
+{
   rm -f "$RW" "$DMG"
 
   # diskutil can't make a writable image from a folder, so fill a blank one, lay it out in Finder,
@@ -59,7 +59,7 @@ for variant in universal apple-silicon intel; do
     echo "$ATTACH" >&2
     exit 1
   fi
-  ditto "build/$variant/StatusCollapse.app" "$MOUNT/StatusCollapse.app"
+  ditto build/StatusCollapse.app "$MOUNT/StatusCollapse.app"
   ln -s /Applications "$MOUNT/Applications"
   mkdir "$MOUNT/.background"
   cp "$BACKGROUND" "$MOUNT/.background/background.tiff"
@@ -95,4 +95,4 @@ OSA
   DEVICE=
   quietly diskutil image create from --format ULFO "$RW" "$DMG"
   echo "Built $DMG"
-done
+}
