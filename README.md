@@ -90,9 +90,12 @@ after system updates.
 ## Changelog and license
 
 See [CHANGELOG.md](CHANGELOG.md); the latest entry is also shown in Settings when you click the
-version line. StatusCollapse is open source under the [MIT License](LICENSE): you may use and
-modify it freely, but you must keep the copyright notice and license text in any copy or
-substantial portion.
+version line. StatusCollapse is source-available under the
+[PolyForm Noncommercial License 1.0.0](LICENSE). You may use, modify and share it for any
+noncommercial purpose, free of charge, but you must keep the `Required Notice:` credit line and
+a copy of the license (or its URL) with anything you share. Selling it or using it commercially
+is not permitted. Strictly speaking this is not an OSI "open source" license, because it
+restricts commercial use.
 
 ## Project layout
 

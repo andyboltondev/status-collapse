@@ -4,7 +4,7 @@
 
 - Added four icon styles: circled chevron, dots, dot and lock
 - Added a changelog, shown by clicking the version line in Settings
-- Added an MIT license
+- Added a license: PolyForm Noncommercial 1.0.0 (free with credit, no commercial use)
 - Recommended for macOS 27, the only version it has been tested on
 
 ## 1.1.0 - 2026-10-02
