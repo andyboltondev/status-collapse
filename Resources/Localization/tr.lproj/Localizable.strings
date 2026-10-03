@@ -111,3 +111,13 @@
 "Version %@ · Build: %@" = "Sürüm %@ · Derleme: %@";
 "Hide menu bar icons you rarely need." = "Nadiren ihtiyaç duyduğunuz menü çubuğu simgelerini gizleyin.";
 "Auto-hide, including hiding again after hover, pauses while this window is open." = "Otomatik gizleme (üzerine geldikten sonra yeniden gizleme dahil) bu pencere açıkken duraklatılır.";
+"Updates" = "Güncellemeler";
+"Check for updates" = "Güncellemeleri denetle";
+"Looks for a newer version once a day. Nothing is downloaded or installed." = "Günde bir kez daha yeni bir sürüm arar. Hiçbir şey indirilmez veya yüklenmez.";
+"Checking…" = "Denetleniyor…";
+"You're up to date." = "Güncelsiniz.";
+"Couldn't check for updates." = "Güncellemeler denetlenemedi.";
+"Version %@" = "Sürüm %@";
+"Version %@ is available." = "%@ sürümü kullanılabilir.";
+"View release" = "Sürümü görüntüle";
+"Check now" = "Şimdi denetle";

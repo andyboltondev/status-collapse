@@ -111,3 +111,13 @@
 "Version %@ · Build: %@" = "Версия %@ · Билд: %@";
 "Hide menu bar icons you rarely need." = "Скрийте иконите в лентата с менюта, от които рядко се нуждаете.";
 "Auto-hide, including hiding again after hover, pauses while this window is open." = "Автоматичното скриване (включително повторното скриване след посочване) е на пауза, докато този прозорец е отворен.";
+"Updates" = "Актуализации";
+"Check for updates" = "Проверка за актуализации";
+"Looks for a newer version once a day. Nothing is downloaded or installed." = "Търси по-нова версия веднъж дневно. Нищо не се изтегля и инсталира.";
+"Checking…" = "Проверка…";
+"You're up to date." = "Използвате последната версия.";
+"Couldn't check for updates." = "Проверката за актуализации не бе успешна.";
+"Version %@" = "Версия %@";
+"Version %@ is available." = "Версия %@ е налична.";
+"View release" = "Преглед на изданието";
+"Check now" = "Провери сега";

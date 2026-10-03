@@ -111,3 +111,13 @@
 "Version %@ · Build: %@" = "Версия %@ · Сборка: %@";
 "Hide menu bar icons you rarely need." = "Скрывайте значки строки меню, которые нужны редко.";
 "Auto-hide, including hiding again after hover, pauses while this window is open." = "Автоскрытие (в том числе повторное скрытие после наведения) приостанавливается, пока это окно открыто.";
+"Updates" = "Обновления";
+"Check for updates" = "Проверять обновления";
+"Looks for a newer version once a day. Nothing is downloaded or installed." = "Раз в день ищет более новую версию. Ничего не загружается и не устанавливается.";
+"Checking…" = "Проверка…";
+"You're up to date." = "У вас последняя версия.";
+"Couldn't check for updates." = "Не удалось проверить обновления.";
+"Version %@" = "Версия %@";
+"Version %@ is available." = "Доступна версия %@.";
+"View release" = "Открыть релиз";
+"Check now" = "Проверить сейчас";

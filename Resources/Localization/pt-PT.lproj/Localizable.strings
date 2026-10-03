@@ -111,3 +111,13 @@
 "Version %@ · Build: %@" = "Versão %@ · Build: %@";
 "Hide menu bar icons you rarely need." = "Oculte os ícones da barra de menus de que raramente precisa.";
 "Auto-hide, including hiding again after hover, pauses while this window is open." = "A ocultação automática (incluindo voltar a ocultar após passar o cursor) fica em pausa enquanto esta janela estiver aberta.";
+"Updates" = "Atualizações";
+"Check for updates" = "Procurar atualizações";
+"Looks for a newer version once a day. Nothing is downloaded or installed." = "Procura uma versão mais recente uma vez por dia. Nada é transferido nem instalado.";
+"Checking…" = "A verificar…";
+"You're up to date." = "Está atualizado.";
+"Couldn't check for updates." = "Não foi possível procurar atualizações.";
+"Version %@" = "Versão %@";
+"Version %@ is available." = "A versão %@ está disponível.";
+"View release" = "Ver versão";
+"Check now" = "Verificar agora";

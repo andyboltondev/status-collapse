@@ -111,3 +111,13 @@
 "Version %@ · Build: %@" = "Versi %@ · Build: %@";
 "Hide menu bar icons you rarely need." = "Sembunyikan ikon bilah menu yang jarang Anda butuhkan.";
 "Auto-hide, including hiding again after hover, pauses while this window is open." = "Penyembunyian otomatis (termasuk menyembunyikan lagi setelah kursor di atas) dijeda selama jendela ini terbuka.";
+"Updates" = "Pembaruan";
+"Check for updates" = "Periksa pembaruan";
+"Looks for a newer version once a day. Nothing is downloaded or installed." = "Mencari versi yang lebih baru sekali sehari. Tidak ada yang diunduh atau dipasang.";
+"Checking…" = "Memeriksa…";
+"You're up to date." = "Anda sudah menggunakan versi terbaru.";
+"Couldn't check for updates." = "Tidak dapat memeriksa pembaruan.";
+"Version %@" = "Versi %@";
+"Version %@ is available." = "Versi %@ tersedia.";
+"View release" = "Lihat rilis";
+"Check now" = "Periksa sekarang";

@@ -111,3 +111,13 @@
 "Version %@ · Build: %@" = "Različica %@ · Gradnja: %@";
 "Hide menu bar icons you rarely need." = "Skrijte ikone v menijski vrstici, ki jih redko potrebujete.";
 "Auto-hide, including hiding again after hover, pauses while this window is open." = "Samodejno skrivanje (vključno s ponovnim skrivanjem po premiku miške) je ustavljeno, dokler je to okno odprto.";
+"Updates" = "Posodobitve";
+"Check for updates" = "Preveri posodobitve";
+"Looks for a newer version once a day. Nothing is downloaded or installed." = "Enkrat na dan poišče novejšo različico. Nič se ne prenese ali namesti.";
+"Checking…" = "Preverjanje …";
+"You're up to date." = "Imate najnovejšo različico.";
+"Couldn't check for updates." = "Posodobitev ni bilo mogoče preveriti.";
+"Version %@" = "Različica %@";
+"Version %@ is available." = "Različica %@ je na voljo.";
+"View release" = "Ogled izdaje";
+"Check now" = "Preveri zdaj";

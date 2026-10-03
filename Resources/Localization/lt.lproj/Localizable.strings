@@ -111,3 +111,13 @@
 "Version %@ · Build: %@" = "Versija %@ · Darinys: %@";
 "Hide menu bar icons you rarely need." = "Paslėpkite retai naudojamas meniu juostos piktogramas.";
 "Auto-hide, including hiding again after hover, pauses while this window is open." = "Automatinis slėpimas (įskaitant pakartotinį slėpimą po žymiklio užvedimo) pristabdomas, kol šis langas atidarytas.";
+"Updates" = "Naujinimai";
+"Check for updates" = "Tikrinti, ar yra naujinimų";
+"Looks for a newer version once a day. Nothing is downloaded or installed." = "Kartą per dieną ieško naujesnės versijos. Niekas nėra atsisiunčiama ar įdiegiama.";
+"Checking…" = "Tikrinama…";
+"You're up to date." = "Turite naujausią versiją.";
+"Couldn't check for updates." = "Nepavyko patikrinti naujinimų.";
+"Version %@" = "Versija %@";
+"Version %@ is available." = "Versija %@ yra prieinama.";
+"View release" = "Peržiūrėti išleidimą";
+"Check now" = "Tikrinti dabar";

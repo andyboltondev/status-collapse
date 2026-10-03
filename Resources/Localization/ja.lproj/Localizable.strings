@@ -111,3 +111,13 @@
 "Version %@ · Build: %@" = "バージョン%@ · ビルド: %@";
 "Hide menu bar icons you rarely need." = "あまり使わないメニューバーアイコンを隠します。";
 "Auto-hide, including hiding again after hover, pauses while this window is open." = "このウインドウを開いている間は、自動で隠す機能（ポインタを乗せたあとの再非表示を含む）は一時停止します。";
+"Updates" = "アップデート";
+"Check for updates" = "アップデートを確認";
+"Looks for a newer version once a day. Nothing is downloaded or installed." = "1日1回、新しいバージョンを確認します。ダウンロードやインストールは行われません。";
+"Checking…" = "確認中…";
+"You're up to date." = "最新の状態です。";
+"Couldn't check for updates." = "アップデートを確認できませんでした。";
+"Version %@" = "バージョン %@";
+"Version %@ is available." = "バージョン %@ が利用できます。";
+"View release" = "リリースを表示";
+"Check now" = "今すぐ確認";

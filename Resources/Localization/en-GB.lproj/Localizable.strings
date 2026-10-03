@@ -111,3 +111,13 @@
 "Version %@ · Build: %@" = "Version %@ · Build: %@";
 "Hide menu bar icons you rarely need." = "Hide menu bar icons you rarely need.";
 "Auto-hide, including hiding again after hover, pauses while this window is open." = "Auto-hide, including hiding again after hover, pauses while this window is open.";
+"Updates" = "Updates";
+"Check for updates" = "Check for updates";
+"Looks for a newer version once a day. Nothing is downloaded or installed." = "Looks for a newer version once a day. Nothing is downloaded or installed.";
+"Checking…" = "Checking…";
+"You're up to date." = "You're up to date.";
+"Couldn't check for updates." = "Couldn't check for updates.";
+"Version %@" = "Version %@";
+"Version %@ is available." = "Version %@ is available.";
+"View release" = "View release";
+"Check now" = "Check now";

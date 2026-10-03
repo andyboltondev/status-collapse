@@ -111,3 +111,13 @@
 "Version %@ · Build: %@" = "Verżjoni %@ · Bini: %@";
 "Hide menu bar icons you rarely need." = "Aħbi l-ikoni tal-bar tal-menu li rari tuża.";
 "Auto-hide, including hiding again after hover, pauses while this window is open." = "Il-moħbi awtomatiku (inkluż it-tħabbija mill-ġdid wara li tgħaddi l-kursur) jieqaf waqt li din it-tieqa tkun miftuħa.";
+"Updates" = "Aġġornamenti";
+"Check for updates" = "Iċċekkja għall-aġġornamenti";
+"Looks for a newer version once a day. Nothing is downloaded or installed." = "Ifittex verżjoni aktar ġdida darba kuljum. Xejn ma jitniżżel jew jiġi installat.";
+"Checking…" = "Qed jiċċekkja…";
+"You're up to date." = "Int aġġornat.";
+"Couldn't check for updates." = "Ma stajtx tiċċekkja għall-aġġornamenti.";
+"Version %@" = "Verżjoni %@";
+"Version %@ is available." = "Verżjoni %@ hija disponibbli.";
+"View release" = "Ara r-rilaxx";
+"Check now" = "Iċċekkja issa";

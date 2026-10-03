@@ -4,8 +4,8 @@ An easy to use, simple, lightweight and minimal menu bar icon collapsing tool fo
 button hides and shows your menu bar icons with a single click, with no clutter and nothing else
 to learn.
 
-> **Requires macOS 27 or later, on Apple silicon.** macOS 27 is the only version it is built for and
-> tested on (see [Compatibility](#compatibility)).
+> **Requires macOS 27 or later, on a Mac with Apple silicon.** Tested on a MacBook Pro with an M5 Pro
+> chip running macOS 27 (see [Compatibility](#compatibility)).
 
 It adds a single **button** (a chevron) to the menu bar. Click it to collapse, and every icon to
 its left disappears. Click it again to bring them back. Everything to the right of the button
@@ -144,13 +144,15 @@ after system updates.
 
 ## Compatibility
 
-- **macOS 27 only.** The app requires macOS 27 and uses its menu bar behavior. The hiding technique
-  was worked out and tested on macOS 27, and macOS 27 runs on Apple silicon only, so there is no
+- **macOS 27 on Apple silicon only.** The app requires macOS 27 and uses its menu bar behavior,
+  which the hiding technique depends on. macOS 27 runs on Apple silicon only, so there is no
   Intel build.
+- **Tested on** a MacBook Pro with an M5 Pro chip and its built-in notched display, running
+  macOS 27.
 - **Displays.** The invisible item's width is worked out in points from the narrowest display, so
-  it adapts to any resolution or scaling, and it is recalculated whenever displays change. Only a
-  notched MacBook display has been tested. Displays without a notch, external displays, and
-  setups mixing displays of different widths have not.
+  it adapts to any resolution or scaling, and it is recalculated whenever displays change. Displays
+  without a notch, external displays, and setups mixing displays of different widths have not been
+  tested.
 
 ## Changelog and license
 
@@ -169,5 +171,5 @@ restricts commercial use.
 - `Resources/Info.plist`: app bundle metadata (menu bar only, no Dock icon)
 - `build.sh`: tests, builds, verifies and packages the app (see [Build and run](#build-and-run))
 - `tools/`: build verification (`verify-build.sh`), DMG packaging (`make-dmg.sh`, `make-dmg-background.swift`) and the icon renderer (`make-icon.swift`)
-- `.github/workflows/release.yml`: runs `./build.sh --dmg` and publishes a GitHub release for `v*` tags
+- `.github/workflows/release.yml`: runs `./build.sh --dmg` on GitHub's `xcode-27` runner (macOS 27, Apple silicon) and publishes a release for `v*` tags
 - `.github/dependabot.yml`: weekly pull requests that update the pinned GitHub Actions

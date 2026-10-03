@@ -111,3 +111,13 @@
 "Version %@ · Build: %@" = "Verzió: %@ · Build: %@";
 "Hide menu bar icons you rarely need." = "Rejtsd el a ritkán használt menüsor-ikonokat.";
 "Auto-hide, including hiding again after hover, pauses while this window is open." = "Az automatikus elrejtés (a rámutatás utáni újbóli elrejtést is beleértve) szünetel, amíg ez az ablak nyitva van.";
+"Updates" = "Frissítések";
+"Check for updates" = "Frissítések keresése";
+"Looks for a newer version once a day. Nothing is downloaded or installed." = "Naponta egyszer keres újabb verziót. Semmi nem töltődik le és nem települ.";
+"Checking…" = "Keresés…";
+"You're up to date." = "A legújabb verziót használja.";
+"Couldn't check for updates." = "A frissítések keresése nem sikerült.";
+"Version %@" = "%@ verzió";
+"Version %@ is available." = "A(z) %@ verzió elérhető.";
+"View release" = "Kiadás megtekintése";
+"Check now" = "Keresés most";

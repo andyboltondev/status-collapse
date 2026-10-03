@@ -111,3 +111,13 @@
 "Version %@ · Build: %@" = "版本 %@ · 构建：%@";
 "Hide menu bar icons you rarely need." = "隐藏不常用的菜单栏图标。";
 "Auto-hide, including hiding again after hover, pauses while this window is open." = "此窗口打开时，自动隐藏（包括悬停后再次隐藏）会暂停。";
+"Updates" = "更新";
+"Check for updates" = "检查更新";
+"Looks for a newer version once a day. Nothing is downloaded or installed." = "每天检查一次是否有较新的版本。不会下载或安装任何内容。";
+"Checking…" = "正在检查…";
+"You're up to date." = "已是最新版本。";
+"Couldn't check for updates." = "无法检查更新。";
+"Version %@" = "版本 %@";
+"Version %@ is available." = "版本 %@ 可用。";
+"View release" = "查看发布";
+"Check now" = "立即检查";

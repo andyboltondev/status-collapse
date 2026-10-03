@@ -111,3 +111,13 @@
 "Version %@ · Build: %@" = "संस्करण %@ · बिल्ड: %@";
 "Hide menu bar icons you rarely need." = "मेन्यू बार के जिन आइकॉन की आपको कम ज़रूरत पड़ती है, उन्हें छिपाएँ।";
 "Auto-hide, including hiding again after hover, pauses while this window is open." = "जब तक यह विंडो खुली है, अपने-आप छिपाना (होवर के बाद दोबारा छिपाना सहित) रुका रहता है।";
+"Updates" = "अपडेट";
+"Check for updates" = "अपडेट के लिए जाँचें";
+"Looks for a newer version once a day. Nothing is downloaded or installed." = "दिन में एक बार नए संस्करण की जाँच करता है। कुछ भी डाउनलोड या इंस्टॉल नहीं होता।";
+"Checking…" = "जाँच हो रही है…";
+"You're up to date." = "आपके पास नवीनतम संस्करण है।";
+"Couldn't check for updates." = "अपडेट की जाँच नहीं हो सकी।";
+"Version %@" = "संस्करण %@";
+"Version %@ is available." = "संस्करण %@ उपलब्ध है।";
+"View release" = "रिलीज़ देखें";
+"Check now" = "अभी जाँचें";

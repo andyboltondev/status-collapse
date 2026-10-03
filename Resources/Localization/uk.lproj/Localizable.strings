@@ -111,3 +111,13 @@
 "Version %@ · Build: %@" = "Версія %@ · Збірка: %@";
 "Hide menu bar icons you rarely need." = "Ховайте піктограми рядка меню, які потрібні рідко.";
 "Auto-hide, including hiding again after hover, pauses while this window is open." = "Автоприховування (зокрема повторне приховування після наведення) призупиняється, доки це вікно відкрите.";
+"Updates" = "Оновлення";
+"Check for updates" = "Перевіряти оновлення";
+"Looks for a newer version once a day. Nothing is downloaded or installed." = "Раз на день шукає новішу версію. Нічого не завантажується й не встановлюється.";
+"Checking…" = "Перевірка…";
+"You're up to date." = "У вас остання версія.";
+"Couldn't check for updates." = "Не вдалося перевірити оновлення.";
+"Version %@" = "Версія %@";
+"Version %@ is available." = "Доступна версія %@.";
+"View release" = "Відкрити випуск";
+"Check now" = "Перевірити зараз";

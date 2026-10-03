@@ -111,3 +111,13 @@
 "Version %@ · Build: %@" = "الإصدار %@ · البنية: %@";
 "Hide menu bar icons you rarely need." = "أخفِ أيقونات شريط القائمة التي نادرًا ما تحتاج إليها.";
 "Auto-hide, including hiding again after hover, pauses while this window is open." = "يتوقف الإخفاء التلقائي (بما في ذلك الإخفاء مجددًا بعد التمرير) مؤقتًا طالما كانت هذه النافذة مفتوحة.";
+"Updates" = "التحديثات";
+"Check for updates" = "التحقق من التحديثات";
+"Looks for a newer version once a day. Nothing is downloaded or installed." = "يبحث عن إصدار أحدث مرة واحدة يوميًا. لا يتم تنزيل أو تثبيت أي شيء.";
+"Checking…" = "جارٍ التحقق…";
+"You're up to date." = "أنت تستخدم أحدث إصدار.";
+"Couldn't check for updates." = "تعذّر التحقق من التحديثات.";
+"Version %@" = "الإصدار %@";
+"Version %@ is available." = "الإصدار %@ متاح.";
+"View release" = "عرض الإصدار";
+"Check now" = "تحقق الآن";

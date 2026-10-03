@@ -59,4 +59,23 @@ import Testing
             #expect(FileManager.default.fileExists(atPath: file.path), "missing \(language.code)")
         }
     }
+
+    /// Every string shown through `L(...)` must be translated in every language, so a new string
+    /// can't ship in English only.
+    @Test func everyStringIsTranslatedEverywhere() throws {
+        let project = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
+            .deletingLastPathComponent().deletingLastPathComponent()
+        let sources = try ["Views", "Controller"].map {
+            try String(contentsOf: project.appending(path: "Sources/StatusCollapse/\($0).swift"), encoding: .utf8)
+        }.joined()
+        let used = Set(sources.matches(of: /\bL\("((?:[^"\\]|\\.)*)"/).map { String($0.1) })
+        #expect(used.count > 50)
+        for language in AppLanguage.all {
+            let file = project.appending(path: "Resources/Localization/\(language.code).lproj/Localizable.strings")
+            let table = try #require(NSDictionary(contentsOf: file) as? [String: String], "\(language.code) unreadable")
+            for key in used where table[key.replacingOccurrences(of: "\\\"", with: "\"")] == nil {
+                Issue.record("\(language.code) lacks \"\(key)\"")
+            }
+        }
+    }
 }

@@ -111,3 +111,13 @@
 "Version %@ · Build: %@" = "Verzia %@ · Zostavenie: %@";
 "Hide menu bar icons you rarely need." = "Skryte ikony v lište ponuky, ktoré potrebujete len zriedka.";
 "Auto-hide, including hiding again after hover, pauses while this window is open." = "Automatické skrytie (vrátane opätovného skrytia po prejdení myšou) je pozastavené, kým je toto okno otvorené.";
+"Updates" = "Aktualizácie";
+"Check for updates" = "Kontrolovať aktualizácie";
+"Looks for a newer version once a day. Nothing is downloaded or installed." = "Raz denne vyhľadá novšiu verziu. Nič sa nesťahuje ani neinštaluje.";
+"Checking…" = "Kontrolujem…";
+"You're up to date." = "Máte najnovšiu verziu.";
+"Couldn't check for updates." = "Aktualizácie sa nepodarilo skontrolovať.";
+"Version %@" = "Verzia %@";
+"Version %@ is available." = "Verzia %@ je k dispozícii.";
+"View release" = "Zobraziť vydanie";
+"Check now" = "Skontrolovať teraz";

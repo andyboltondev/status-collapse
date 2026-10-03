@@ -111,3 +111,13 @@
 "Version %@ · Build: %@" = "Versio %@ · Koontiversio: %@";
 "Hide menu bar icons you rarely need." = "Piilota valikkopalkin kuvakkeet, joita tarvitset harvoin.";
 "Auto-hide, including hiding again after hover, pauses while this window is open." = "Automaattinen piilotus (myös piilotus uudelleen osoittamisen jälkeen) on tauolla, kun tämä ikkuna on auki.";
+"Updates" = "Päivitykset";
+"Check for updates" = "Tarkista päivitykset";
+"Looks for a newer version once a day. Nothing is downloaded or installed." = "Etsii uudempaa versiota kerran päivässä. Mitään ei ladata tai asenneta.";
+"Checking…" = "Tarkistetaan…";
+"You're up to date." = "Käytössäsi on uusin versio.";
+"Couldn't check for updates." = "Päivitysten tarkistaminen epäonnistui.";
+"Version %@" = "Versio %@";
+"Version %@ is available." = "Versio %@ on saatavilla.";
+"View release" = "Näytä julkaisu";
+"Check now" = "Tarkista nyt";

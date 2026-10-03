@@ -111,3 +111,13 @@
 "Version %@ · Build: %@" = "Versija %@ · Būve: %@";
 "Hide menu bar icons you rarely need." = "Paslēp izvēlņu joslas ikonas, kas tev vajadzīgas reti.";
 "Auto-hide, including hiding again after hover, pauses while this window is open." = "Automātiskā slēpšana (tostarp atkārtota slēpšana pēc kursora uzvešanas) ir apturēta, kamēr šis logs ir atvērts.";
+"Updates" = "Atjauninājumi";
+"Check for updates" = "Meklēt atjauninājumus";
+"Looks for a newer version once a day. Nothing is downloaded or installed." = "Reizi dienā meklē jaunāku versiju. Nekas netiek lejupielādēts vai instalēts.";
+"Checking…" = "Pārbauda…";
+"You're up to date." = "Jums ir jaunākā versija.";
+"Couldn't check for updates." = "Neizdevās pārbaudīt atjauninājumus.";
+"Version %@" = "Versija %@";
+"Version %@ is available." = "Versija %@ ir pieejama.";
+"View release" = "Skatīt laidienu";
+"Check now" = "Pārbaudīt tagad";

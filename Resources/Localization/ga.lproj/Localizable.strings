@@ -111,3 +111,13 @@
 "Version %@ · Build: %@" = "Leagan %@ · Tógáil: %@";
 "Hide menu bar icons you rarely need." = "Folaigh deilbhíní na barra roghchláir nach mbíonn call agat leo go minic.";
 "Auto-hide, including hiding again after hover, pauses while this window is open." = "Cuirtear an folú uathoibríoch (an folú arís tar éis scáileadh san áireamh) ar sos cé go bhfuil an fhuinneog seo ar oscailt.";
+"Updates" = "Nuashonruithe";
+"Check for updates" = "Seiceáil le haghaidh nuashonruithe";
+"Looks for a newer version once a day. Nothing is downloaded or installed." = "Féachann sé le leagan níos nuaí uair sa lá. Ní dhéantar aon rud a íoslódáil ná a shuiteáil.";
+"Checking…" = "Ag seiceáil…";
+"You're up to date." = "Tá an leagan is déanaí agat.";
+"Couldn't check for updates." = "Níorbh fhéidir nuashonruithe a sheiceáil.";
+"Version %@" = "Leagan %@";
+"Version %@ is available." = "Tá leagan %@ ar fáil.";
+"View release" = "Féach ar an eisiúint";
+"Check now" = "Seiceáil anois";

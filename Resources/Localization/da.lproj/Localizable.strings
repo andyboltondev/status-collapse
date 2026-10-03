@@ -111,3 +111,13 @@
 "Version %@ · Build: %@" = "Version %@ · Build: %@";
 "Hide menu bar icons you rarely need." = "Skjul symboler i menulinjen, som du sjældent bruger.";
 "Auto-hide, including hiding again after hover, pauses while this window is open." = "Automatisk skjulning (også skjulning igen efter hover) sættes på pause, mens dette vindue er åbent.";
+"Updates" = "Opdateringer";
+"Check for updates" = "Søg efter opdateringer";
+"Looks for a newer version once a day. Nothing is downloaded or installed." = "Leder efter en nyere version en gang om dagen. Intet downloades eller installeres.";
+"Checking…" = "Søger…";
+"You're up to date." = "Du har den nyeste version.";
+"Couldn't check for updates." = "Kunne ikke søge efter opdateringer.";
+"Version %@" = "Version %@";
+"Version %@ is available." = "Version %@ er tilgængelig.";
+"View release" = "Se udgivelse";
+"Check now" = "Søg nu";

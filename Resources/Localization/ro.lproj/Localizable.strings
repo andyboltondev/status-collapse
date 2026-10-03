@@ -111,3 +111,13 @@
 "Version %@ · Build: %@" = "Versiunea %@ · Build: %@";
 "Hide menu bar icons you rarely need." = "Ascunde pictogramele din bara de meniu de care ai rar nevoie.";
 "Auto-hide, including hiding again after hover, pauses while this window is open." = "Ascunderea automată (inclusiv ascunderea din nou după trecerea cursorului) este în pauză cât timp această fereastră este deschisă.";
+"Updates" = "Actualizări";
+"Check for updates" = "Caută actualizări";
+"Looks for a newer version once a day. Nothing is downloaded or installed." = "Caută o versiune mai nouă o dată pe zi. Nu se descarcă și nu se instalează nimic.";
+"Checking…" = "Se verifică…";
+"You're up to date." = "Ești la zi.";
+"Couldn't check for updates." = "Nu s-au putut căuta actualizări.";
+"Version %@" = "Versiunea %@";
+"Version %@ is available." = "Versiunea %@ este disponibilă.";
+"View release" = "Vezi versiunea";
+"Check now" = "Verifică acum";

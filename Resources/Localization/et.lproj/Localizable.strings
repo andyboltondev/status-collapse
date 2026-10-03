@@ -111,3 +111,13 @@
 "Version %@ · Build: %@" = "Versioon %@ · Järk: %@";
 "Hide menu bar icons you rarely need." = "Peida menüüribaikoonid, mida harva vajad.";
 "Auto-hide, including hiding again after hover, pauses while this window is open." = "Automaatne peitmine (sh uuesti peitmine pärast kursoriga puudutamist) on peatatud, kuni see aken on avatud.";
+"Updates" = "Värskendused";
+"Check for updates" = "Otsi värskendusi";
+"Looks for a newer version once a day. Nothing is downloaded or installed." = "Otsib uuemat versiooni kord päevas. Midagi ei laadita alla ega paigaldata.";
+"Checking…" = "Kontrollin…";
+"You're up to date." = "Sul on uusim versioon.";
+"Couldn't check for updates." = "Värskenduste kontrollimine ebaõnnestus.";
+"Version %@" = "Versioon %@";
+"Version %@ is available." = "Versioon %@ on saadaval.";
+"View release" = "Vaata väljalaset";
+"Check now" = "Kontrolli kohe";

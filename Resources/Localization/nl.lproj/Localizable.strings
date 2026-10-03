@@ -111,3 +111,13 @@
 "Version %@ · Build: %@" = "Versie %@ · Build: %@";
 "Hide menu bar icons you rarely need." = "Verberg menubalksymbolen die je zelden nodig hebt.";
 "Auto-hide, including hiding again after hover, pauses while this window is open." = "Automatisch verbergen (ook opnieuw verbergen na aanwijzen) wordt gepauzeerd zolang dit venster open is.";
+"Updates" = "Updates";
+"Check for updates" = "Zoeken naar updates";
+"Looks for a newer version once a day. Nothing is downloaded or installed." = "Zoekt één keer per dag naar een nieuwere versie. Er wordt niets gedownload of geïnstalleerd.";
+"Checking…" = "Zoeken…";
+"You're up to date." = "Je hebt de nieuwste versie.";
+"Couldn't check for updates." = "Kan niet naar updates zoeken.";
+"Version %@" = "Versie %@";
+"Version %@ is available." = "Versie %@ is beschikbaar.";
+"View release" = "Release bekijken";
+"Check now" = "Nu zoeken";

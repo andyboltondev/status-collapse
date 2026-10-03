@@ -111,3 +111,13 @@
 "Version %@ · Build: %@" = "Version %@ · Bygge: %@";
 "Hide menu bar icons you rarely need." = "Dölj symboler i menyraden som du sällan behöver.";
 "Auto-hide, including hiding again after hover, pauses while this window is open." = "Automatisk döljning (även döljning igen efter hovring) pausas medan det här fönstret är öppet.";
+"Updates" = "Uppdateringar";
+"Check for updates" = "Sök efter uppdateringar";
+"Looks for a newer version once a day. Nothing is downloaded or installed." = "Letar efter en nyare version en gång om dagen. Inget laddas ned eller installeras.";
+"Checking…" = "Söker…";
+"You're up to date." = "Du har den senaste versionen.";
+"Couldn't check for updates." = "Det gick inte att söka efter uppdateringar.";
+"Version %@" = "Version %@";
+"Version %@ is available." = "Version %@ är tillgänglig.";
+"View release" = "Visa version";
+"Check now" = "Sök nu";

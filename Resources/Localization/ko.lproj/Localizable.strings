@@ -111,3 +111,13 @@
 "Version %@ · Build: %@" = "버전 %@ · 빌드: %@";
 "Hide menu bar icons you rarely need." = "자주 쓰지 않는 메뉴 막대 아이콘을 숨깁니다.";
 "Auto-hide, including hiding again after hover, pauses while this window is open." = "이 윈도우가 열려 있는 동안에는 자동 숨김(포인터를 올린 후 다시 숨기는 동작 포함)이 일시 중지됩니다.";
+"Updates" = "업데이트";
+"Check for updates" = "업데이트 확인";
+"Looks for a newer version once a day. Nothing is downloaded or installed." = "하루에 한 번 새 버전을 확인합니다. 아무것도 다운로드하거나 설치하지 않습니다.";
+"Checking…" = "확인 중…";
+"You're up to date." = "최신 버전입니다.";
+"Couldn't check for updates." = "업데이트를 확인할 수 없습니다.";
+"Version %@" = "버전 %@";
+"Version %@ is available." = "버전 %@을(를) 사용할 수 있습니다.";
+"View release" = "릴리스 보기";
+"Check now" = "지금 확인";

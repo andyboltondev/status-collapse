@@ -111,3 +111,13 @@
 "Version %@ · Build: %@" = "Έκδοση %@ · Build: %@";
 "Hide menu bar icons you rarely need." = "Κρύψτε τα εικονίδια της γραμμής μενού που χρειάζεστε σπάνια.";
 "Auto-hide, including hiding again after hover, pauses while this window is open." = "Η αυτόματη απόκρυψη (συμπεριλαμβανομένης της νέας απόκρυψης μετά το πέρασμα του δείκτη) παύει όσο αυτό το παράθυρο είναι ανοιχτό.";
+"Updates" = "Ενημερώσεις";
+"Check for updates" = "Έλεγχος για ενημερώσεις";
+"Looks for a newer version once a day. Nothing is downloaded or installed." = "Αναζητά νεότερη έκδοση μία φορά την ημέρα. Δεν γίνεται λήψη ή εγκατάσταση τίποτα.";
+"Checking…" = "Έλεγχος…";
+"You're up to date." = "Έχετε την πιο πρόσφατη έκδοση.";
+"Couldn't check for updates." = "Δεν ήταν δυνατός ο έλεγχος για ενημερώσεις.";
+"Version %@" = "Έκδοση %@";
+"Version %@ is available." = "Η έκδοση %@ είναι διαθέσιμη.";
+"View release" = "Προβολή έκδοσης";
+"Check now" = "Έλεγχος τώρα";
