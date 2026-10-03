@@ -11,8 +11,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         controller = Controller()
-        controller.openSettings = { [weak self] in self?.showWindow() }
-        // First launch, or setup has gained steps since the user last finished it.
+        controller.openSettings = { [weak self] in self?.showWindow() }        // First launch, or setup has gained steps since the user last finished it.
         if !UserDefaults.standard.bool(forKey: Controller.setupKey) { showWindow() }
     }
 

@@ -24,6 +24,7 @@ for variant in universal apple-silicon intel; do
   esac
   cp Resources/Info.plist "$APP/Contents/"
   cp Resources/AppIcon.icns CHANGELOG.md "$APP/Contents/Resources/"
+  cp -R Resources/Localization/*.lproj "$APP/Contents/Resources/"
   /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $BUILD" "$APP/Contents/Info.plist"
   # The hardened runtime blocks code injection (e.g. DYLD_INSERT_LIBRARIES) and libraries not
   # signed by Apple. The app needs no exceptions, and notarization requires it.

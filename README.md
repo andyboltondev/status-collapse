@@ -13,12 +13,16 @@ its left disappears. Click it again to bring them back. Everything to the right 
 
 ## Features
 
-- One-click collapse/expand with an animated chevron
-- Auto-hide after 5, 10, 30 or 60 seconds once the pointer leaves the menu bar
-- Eight icon styles: native double chevron, chevron, circled chevron, arrow, eye, dots, dot, lock
+- One-click collapse/expand with an animated button
+- 19 icon styles plus custom text, with adjustable size and weight
+- Global keyboard shortcut (default ⌃⌥S), reveal on hover, and a right-click menu
+- Auto-hide with a slider delay, optionally only on battery or mains power
+- Hides when the Mac locks or sleeps, or when a display is mirrored
+- Fade the button when icons are hidden, or show it only while icons are shown, revealing them with the shortcut
+- Export and import settings
+- 36 languages, defaulting to British English and following macOS
 - Icons stay visible while Settings is open so they are easy to rearrange
 - Launch at login
-- Right-click (or Control-click) the button for Settings and Quit
 
 ## Requirements
 

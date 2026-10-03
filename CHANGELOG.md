@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.3.0 - 2026-10-03
+
+- Added twelve icon styles (ellipsis, light chevron, triangle, tray, grid, sidebar, menu bar, plus and minus, pin, moon, bolt) and custom text, plus icon size and weight
+- Added a global keyboard shortcut (default ⌃⌥S, one-handed) that you can change or turn off
+- Added reveal on hover (which, like every setting except auto-hide, also works while Settings is open), a right-click Hide/Show item, and a hidden-icon count in the tooltip
+- Added hiding when the Mac locks or sleeps, and when a display is mirrored
+- Auto-hide is now a slider, and can be limited to battery or mains power
+- Added button opacity when icons are hidden, and the option to show the button only while icons are shown
+- Added settings export and import
+- Translated into 36 languages (British English is the default); choose one in Settings or follow macOS
+- Settings are split into Menu bar, Behaviour and General tabs
+
 ## 1.2.0 - 2026-10-03
 
 - Added four icon styles: circled chevron, dots, dot and lock
