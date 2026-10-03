@@ -1,11 +1,11 @@
 #!/bin/zsh
-# Builds the app, then packages it as build/StatusCollapse-<version>.dmg with a
+# Packages the app built by ./build.sh as build/StatusCollapse-<version>.dmg with a
 # drag-to-Applications layout. Images are made with `diskutil image`, which replaces the hdiutil
 # verbs deprecated in macOS 27.
 # Positioning icons drives Finder via AppleScript, so macOS may ask to allow automation the first time.
 set -euo pipefail
 cd "$(dirname "$0")/.."
-./build.sh
+[[ -d build/StatusCollapse.app ]] || { echo "Run ./build.sh first: build/StatusCollapse.app is missing." >&2; exit 1 }
 VERSION=$(/usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" build/StatusCollapse.app/Contents/Info.plist)
 VOL=StatusCollapse
 RW=build/rw.dmg

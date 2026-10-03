@@ -13,17 +13,20 @@ its left disappears. Click it again to bring them back. Everything to the right 
 
 ## Features
 
-- One-click collapse/expand with an animated button
-- 19 icon styles plus custom text, with adjustable size and weight
-- Global keyboard shortcut (default ⌃⌥S), reveal on hover, and a right-click menu
-- Auto-hide with a slider delay, optionally only on battery or mains power
-- Hides when the Mac locks or sleeps, or when a display is mirrored
-- Fade the button when icons are hidden, or show it only while icons are shown, revealing them with the shortcut
-- Export and import settings
-- Optional daily check for a newer release (it only links to it; nothing is downloaded)
-- 36 languages, defaulting to British English and following macOS
-- Icons stay visible while Settings is open so they are easy to rearrange
-- Launch at login
+- **One-click collapse and expand** with an animated button. Everything to the right of the
+  button is never touched.
+- **19 icon styles** plus your own text (up to four characters), with adjustable size, weight and
+  fade when icons are hidden.
+- **Global keyboard shortcut** (default ⌃⌥S, one-handed) that you can change or turn off.
+- **Reveal on hover**, and a right-click menu with Hide/Show, Settings and Quit.
+- **Auto-hide** after a delay you choose, optionally only on battery or only on mains power.
+- **Privacy**: hide the icons when the Mac locks or sleeps, or when a display is mirrored.
+- **Hide the button itself** while the icons are hidden, and bring everything back with the shortcut.
+- **Launch at login**, and **export and import** of your settings.
+- **Update check**: an optional daily look for a newer release. It only links to it; nothing is
+  downloaded or installed.
+- **36 languages**, defaulting to British English and following macOS.
+- **No permissions needed.** It only manages its own menu bar items.
 
 ## Requirements
 
@@ -48,17 +51,85 @@ needs a paid Apple Developer account), so macOS blocks it the first time you ope
 open build/StatusCollapse.app
 ```
 
-`build.sh` builds an Apple silicon release binary and wraps it in an ad-hoc signed app with the
-hardened runtime enabled: `build/StatusCollapse.app`. `./tools/make-dmg.sh` packages it as a
-drag-to-Applications DMG in `build/`.
+`./build.sh` is the one command for everything. By default it runs the tests, builds an Apple
+silicon release binary into an ad-hoc signed app with the hardened runtime
+(`build/StatusCollapse.app`), then verifies the result (architecture, signature, version, minimum
+macOS, changelog and languages). Options choose the stages:
+
+| Option | Effect |
+|---|---|
+| `--dmg` | also package a drag-to-Applications DMG in `build/` |
+| `--tests-only` | only run the tests |
+| `--skip-tests` | skip the tests |
+| `--skip-build` | skip building (verify or package the existing app) |
+| `--skip-verify` | skip verifying the built app |
 
 Quit any installed copy before opening a build, so the two don't both add a button.
 
 ## Usage
 
 1. Hold **⌘** and drag the button (or other icons) so the icons you want to hide sit to its left.
-2. Click the button to collapse or expand.
-3. If the button goes missing, use **Reset Layout** in Settings.
+   Icons to the right of the button always stay visible.
+2. Click the button to collapse or expand. The tooltip shows how many icons are hidden.
+3. Right-click (or Control-click) the button for **Hide/Show**, **Settings** and **Quit**.
+4. Or press the keyboard shortcut (⌃⌥S by default) from anywhere.
+
+The first launch walks you through arranging your icons and turning on Open at login. Run it again
+any time from **Settings › General › Run Setup**.
+
+While Settings is open the icons stay shown so they are easy to arrange, and auto-hide pauses.
+When you close it, they return to the state they were in. If nothing sits to the left of the
+button yet, it is dimmed to show it has nothing to hide.
+
+## Settings
+
+Open Settings from the right-click menu. It has three tabs, and the window opens tall enough to
+show a tab without scrolling (up to 80% of your screen's height). You can resize it.
+
+### Menu bar
+
+| Setting | What it does |
+|---|---|
+| Icon | The button's look: native double chevron, chevron, light chevron, circled chevron, arrow, triangle, eye, dots, ellipsis, dot, lock, tray, grid, sidebar, menu bar, plus and minus, pin, moon, bolt, or custom text |
+| Text when icons are shown / hidden | For the custom style: up to four characters each, such as ▸ or ••• |
+| Size, Weight | How large and heavy the button is drawn |
+| Opacity when icons are hidden | Fades the button while it isn't needed (20% to 100%) |
+| Show the button | **Always**, or **Only when icons are shown**, which needs the keyboard shortcut to bring them back |
+
+### Behaviour
+
+| Setting | What it does |
+|---|---|
+| Keyboard shortcut | Turns the global shortcut on or off and lets you record another. If macOS or another app already uses it, you are asked to choose another |
+| Auto-hide | Hides the icons again after 5 to 120 seconds (or Never) |
+| Auto-hide on | Limits auto-hide to battery power or mains power |
+| Reveal on hover | Shows the icons when the pointer touches the button, then hides them again after the auto-hide delay (2 seconds if auto-hide is off) |
+| Hide when the Mac locks or sleeps | So the icons are hidden when you return (on by default) |
+| Hide when mirroring a display | For projectors and AirPlay screens |
+
+### General
+
+| Setting | What it does |
+|---|---|
+| Open at login | Starts StatusCollapse when you sign in |
+| Language | One of 36 languages, or follow your Mac |
+| Check for updates | Looks for a newer release once a day, or use **Check now**. It only links to the release page |
+| Export / Import | Saves your settings to a file, or loads them on another Mac. Only preferences are included, not the current state or button position |
+| Run Setup, Reset Layout, System Settings | Repeat the walkthrough, recreate a missing button, or open Menu Bar settings in System Settings |
+
+Click the version line at the bottom of Settings to see what's new in this version.
+
+## Troubleshooting
+
+- **The button is missing.** Open StatusCollapse again from Finder (or Spotlight) to bring up
+  Settings, then use **Reset Layout** in the General tab.
+- **The shortcut does nothing.** Another app may use the same keys. Record a different shortcut.
+  With no working shortcut, the button is kept visible so you can still click it.
+- **Icons won't hide.** Only icons to the left of the button are hidden. ⌘-drag them there.
+  macOS doesn't let apps move other apps' icons, so arranging is manual.
+- **Two buttons appear.** Quit any other copy first, such as an installed copy while testing a build.
+- **"Couldn't check for updates".** The check needs a published release and an internet connection.
+  Turn it off under Settings › General if you prefer.
 
 ## How it works
 
@@ -81,11 +152,6 @@ after system updates.
   notched MacBook display has been tested. Displays without a notch, external displays, and
   setups mixing displays of different widths have not.
 
-## Tests
-
-`swift test` runs the unit tests. The release workflow runs them, builds the apps, then runs
-`tools/verify-build.sh`, which checks the architecture, signature, version, minimum macOS, changelog and languages.
-
 ## Changelog and license
 
 See [CHANGELOG.md](CHANGELOG.md); the latest entry is also shown in Settings when you click the
@@ -101,7 +167,7 @@ restricts commercial use.
 - `Sources/StatusCollapse/Controller.swift`: status items, collapse logic, auto-hide
 - `Sources/StatusCollapse/Views.swift`, `AppDelegate.swift`, `main.swift`: settings UI and app setup
 - `Resources/Info.plist`: app bundle metadata (menu bar only, no Dock icon)
-- `build.sh`: builds the Apple silicon app
-- `tools/`: DMG packaging (`make-dmg.sh`, `make-dmg-background.swift`) and the icon renderer (`make-icon.swift`)
-- `.github/workflows/release.yml`: builds the DMG and publishes a GitHub release for `v*` tags
+- `build.sh`: tests, builds, verifies and packages the app (see [Build and run](#build-and-run))
+- `tools/`: build verification (`verify-build.sh`), DMG packaging (`make-dmg.sh`, `make-dmg-background.swift`) and the icon renderer (`make-icon.swift`)
+- `.github/workflows/release.yml`: runs `./build.sh --dmg` and publishes a GitHub release for `v*` tags
 - `.github/dependabot.yml`: weekly pull requests that update the pinned GitHub Actions
