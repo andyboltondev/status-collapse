@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.0.0 - Unreleased
+## 1.0.0 - 2026-10-03
 
 First release. Requires macOS 27 on Apple silicon; tested on a MacBook Pro with an M5 Pro chip.
 
