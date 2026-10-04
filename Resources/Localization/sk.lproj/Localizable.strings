@@ -121,3 +121,11 @@
 "Version %@ is available." = "Verzia %@ je k dispozícii.";
 "View release" = "Zobraziť vydanie";
 "Check now" = "Skontrolovať teraz";
+"Other displays" = "Ďalšie displeje";
+"Prevent click highlights" = "Zabrániť zvýrazneniu po kliknutí";
+"Clicking the empty menu bar beside the button on a display you aren't using can briefly highlight it. Preventing this needs the Device Control and Data Access permission." = "Kliknutie na prázdnu lištu ponuky vedľa tlačidla na displeji, ktorý práve nepoužívate, ju môže nakrátko zvýrazniť. Aby sa tomu zabránilo, je potrebné povolenie „Ovládanie zariadenia a prístup k dátam“.";
+"Access is allowed. StatusCollapse only reads where menu bar items are." = "Prístup je povolený. StatusCollapse iba zisťuje, kde sú položky lišty ponuky.";
+"Waiting for access. Turn on StatusCollapse in Privacy & Security → Device Control and Data Access. If it's already on, turn it off and on again." = "Čaká sa na prístup. Zapnite StatusCollapse v Súkromie a bezpečnosť → Ovládanie zariadenia a prístup k dátam. Ak je už zapnutý, vypnite ho a znova zapnite.";
+"Open Privacy & Security" = "Otvoriť Súkromie a bezpečnosť";
+"What's New" = "Novinky";
+"Close" = "Zavrieť";

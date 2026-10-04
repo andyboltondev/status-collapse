@@ -121,3 +121,11 @@
 "Version %@ is available." = "Versi %@ tersedia.";
 "View release" = "Lihat rilis";
 "Check now" = "Periksa sekarang";
+"Other displays" = "Layar lain";
+"Prevent click highlights" = "Cegah sorotan saat diklik";
+"Clicking the empty menu bar beside the button on a display you aren't using can briefly highlight it. Preventing this needs the Device Control and Data Access permission." = "Mengeklik bilah menu kosong di samping tombol pada layar yang tidak Anda gunakan dapat menyorotnya sesaat. Untuk mencegahnya, diperlukan izin “Kontrol Perangkat dan Akses Data”.";
+"Access is allowed. StatusCollapse only reads where menu bar items are." = "Akses diizinkan. StatusCollapse hanya membaca letak item bilah menu.";
+"Waiting for access. Turn on StatusCollapse in Privacy & Security → Device Control and Data Access. If it's already on, turn it off and on again." = "Menunggu akses. Nyalakan StatusCollapse di Privasi & Keamanan → Kontrol Perangkat dan Akses Data. Jika sudah menyala, matikan lalu nyalakan lagi.";
+"Open Privacy & Security" = "Buka Privasi & Keamanan";
+"What's New" = "Yang Baru";
+"Close" = "Tutup";

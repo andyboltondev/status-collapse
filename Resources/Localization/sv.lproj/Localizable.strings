@@ -121,3 +121,11 @@
 "Version %@ is available." = "Version %@ är tillgänglig.";
 "View release" = "Visa version";
 "Check now" = "Sök nu";
+"Other displays" = "Andra skärmar";
+"Prevent click highlights" = "Förhindra klickmarkering";
+"Clicking the empty menu bar beside the button on a display you aren't using can briefly highlight it. Preventing this needs the Device Control and Data Access permission." = "Ett klick på den tomma menyraden bredvid knappen på en skärm du inte använder kan markera den en kort stund. För att förhindra det krävs behörigheten ”Enhetskontroll och dataåtkomst”.";
+"Access is allowed. StatusCollapse only reads where menu bar items are." = "Åtkomst är tillåten. StatusCollapse läser bara var objekten i menyraden finns.";
+"Waiting for access. Turn on StatusCollapse in Privacy & Security → Device Control and Data Access. If it's already on, turn it off and on again." = "Väntar på åtkomst. Slå på StatusCollapse under Integritet och säkerhet → Enhetskontroll och dataåtkomst. Om det redan är på, slå av och på det igen.";
+"Open Privacy & Security" = "Öppna Integritet och säkerhet";
+"What's New" = "Nyheter";
+"Close" = "Stäng";

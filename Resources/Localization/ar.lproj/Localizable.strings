@@ -121,3 +121,11 @@
 "Version %@ is available." = "الإصدار %@ متاح.";
 "View release" = "عرض الإصدار";
 "Check now" = "تحقق الآن";
+"Other displays" = "شاشات أخرى";
+"Prevent click highlights" = "منع التمييز عند النقر";
+"Clicking the empty menu bar beside the button on a display you aren't using can briefly highlight it. Preventing this needs the Device Control and Data Access permission." = "قد يؤدي النقر على شريط القائمة الفارغ بجوار الزر في شاشة لا تستخدمها إلى تمييزه لحظيًا. يتطلب منع ذلك إذن «التحكم في الأجهزة والوصول إلى البيانات».";
+"Access is allowed. StatusCollapse only reads where menu bar items are." = "الوصول مسموح به. يقرأ StatusCollapse فقط أماكن عناصر شريط القائمة.";
+"Waiting for access. Turn on StatusCollapse in Privacy & Security → Device Control and Data Access. If it's already on, turn it off and on again." = "في انتظار الإذن. شغّل StatusCollapse في الخصوصية والأمن ← التحكم في الأجهزة والوصول إلى البيانات. إذا كان مشغّلًا بالفعل، فأوقفه ثم شغّله مرة أخرى.";
+"Open Privacy & Security" = "فتح الخصوصية والأمن";
+"What's New" = "ما الجديد";
+"Close" = "إغلاق";

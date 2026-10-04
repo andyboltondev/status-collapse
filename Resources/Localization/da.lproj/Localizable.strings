@@ -121,3 +121,11 @@
 "Version %@ is available." = "Version %@ er tilgængelig.";
 "View release" = "Se udgivelse";
 "Check now" = "Søg nu";
+"Other displays" = "Andre skærme";
+"Prevent click highlights" = "Undgå klikmarkering";
+"Clicking the empty menu bar beside the button on a display you aren't using can briefly highlight it. Preventing this needs the Device Control and Data Access permission." = "Et klik på den tomme menulinje ved siden af knappen på en skærm, du ikke bruger, kan kortvarigt markere den. For at undgå det kræves tilladelsen “Styring af enhed og adgang til data”.";
+"Access is allowed. StatusCollapse only reads where menu bar items are." = "Adgang er tilladt. StatusCollapse læser kun, hvor emnerne på menulinjen er.";
+"Waiting for access. Turn on StatusCollapse in Privacy & Security → Device Control and Data Access. If it's already on, turn it off and on again." = "Venter på adgang. Slå StatusCollapse til under Anonymitet & sikkerhed → Styring af enhed og adgang til data. Hvis det allerede er slået til, så slå det fra og til igen.";
+"Open Privacy & Security" = "Åbn Anonymitet & sikkerhed";
+"What's New" = "Nyheder";
+"Close" = "Luk";

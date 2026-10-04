@@ -121,3 +121,11 @@
 "Version %@ is available." = "Version %@ ist verfügbar.";
 "View release" = "Release ansehen";
 "Check now" = "Jetzt suchen";
+"Other displays" = "Andere Displays";
+"Prevent click highlights" = "Klick-Hervorhebung verhindern";
+"Clicking the empty menu bar beside the button on a display you aren't using can briefly highlight it. Preventing this needs the Device Control and Data Access permission." = "Ein Klick auf die leere Menüleiste neben der Schaltfläche kann sie auf einem Bildschirm, den du gerade nicht nutzt, kurz hervorheben. Um das zu verhindern, ist die Berechtigung „Gerätesteuerung und Datenzugriff“ nötig.";
+"Access is allowed. StatusCollapse only reads where menu bar items are." = "Zugriff ist erlaubt. StatusCollapse liest nur, wo sich Menüleistenobjekte befinden.";
+"Waiting for access. Turn on StatusCollapse in Privacy & Security → Device Control and Data Access. If it's already on, turn it off and on again." = "Warten auf Zugriff. Aktiviere StatusCollapse unter „Datenschutz & Sicherheit“ → „Gerätesteuerung und Datenzugriff“. Ist es bereits aktiviert, schalte es aus und wieder ein.";
+"Open Privacy & Security" = "„Datenschutz & Sicherheit“ öffnen";
+"What's New" = "Neuigkeiten";
+"Close" = "Schließen";

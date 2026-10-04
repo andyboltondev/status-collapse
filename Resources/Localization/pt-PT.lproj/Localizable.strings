@@ -121,3 +121,11 @@
 "Version %@ is available." = "A versão %@ está disponível.";
 "View release" = "Ver versão";
 "Check now" = "Verificar agora";
+"Other displays" = "Outros ecrãs";
+"Prevent click highlights" = "Evitar realces ao clicar";
+"Clicking the empty menu bar beside the button on a display you aren't using can briefly highlight it. Preventing this needs the Device Control and Data Access permission." = "Clicar na barra de menus vazia junto ao botão num ecrã que não está a usar pode realçá-la por instantes. Evitá-lo requer a permissão “Controlo do dispositivo e acesso a dados”.";
+"Access is allowed. StatusCollapse only reads where menu bar items are." = "O acesso está permitido. O StatusCollapse só lê onde estão os elementos da barra de menus.";
+"Waiting for access. Turn on StatusCollapse in Privacy & Security → Device Control and Data Access. If it's already on, turn it off and on again." = "A aguardar acesso. Ative o StatusCollapse em Privacidade e segurança → Controlo do dispositivo e acesso a dados. Se já estiver ativado, desative-o e volte a ativá-lo.";
+"Open Privacy & Security" = "Abrir Privacidade e segurança";
+"What's New" = "Novidades";
+"Close" = "Fechar";

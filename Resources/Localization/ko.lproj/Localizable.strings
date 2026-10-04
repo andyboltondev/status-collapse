@@ -121,3 +121,11 @@
 "Version %@ is available." = "버전 %@을(를) 사용할 수 있습니다.";
 "View release" = "릴리스 보기";
 "Check now" = "지금 확인";
+"Other displays" = "다른 디스플레이";
+"Prevent click highlights" = "클릭 강조 표시 방지";
+"Clicking the empty menu bar beside the button on a display you aren't using can briefly highlight it. Preventing this needs the Device Control and Data Access permission." = "사용하지 않는 디스플레이에서 버튼 옆의 빈 메뉴 막대를 클릭하면 잠시 강조 표시될 수 있습니다. 이를 방지하려면 ‘기기 제어 및 데이터 접근’ 권한이 필요합니다.";
+"Access is allowed. StatusCollapse only reads where menu bar items are." = "접근이 허용되었습니다. StatusCollapse는 메뉴 막대 항목의 위치만 읽습니다.";
+"Waiting for access. Turn on StatusCollapse in Privacy & Security → Device Control and Data Access. If it's already on, turn it off and on again." = "접근 권한을 기다리는 중입니다. 개인정보 보호 및 보안 → 기기 제어 및 데이터 접근에서 StatusCollapse를 켜십시오. 이미 켜져 있다면 껐다가 다시 켜십시오.";
+"Open Privacy & Security" = "개인정보 보호 및 보안 열기";
+"What's New" = "새로운 기능";
+"Close" = "닫기";

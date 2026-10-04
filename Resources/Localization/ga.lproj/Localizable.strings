@@ -121,3 +121,11 @@
 "Version %@ is available." = "Tá leagan %@ ar fáil.";
 "View release" = "Féach ar an eisiúint";
 "Check now" = "Seiceáil anois";
+"Other displays" = "Taispeáintí eile";
+"Prevent click highlights" = "Cosc a chur ar aibhsiú cliceála";
+"Clicking the empty menu bar beside the button on a display you aren't using can briefly highlight it. Preventing this needs the Device Control and Data Access permission." = "Má chliceálann tú an barra roghchláir folamh in aice leis an gcnaipe ar thaispeáint nach bhfuil tú ag úsáid, d’fhéadfadh sé é a aibhsiú ar feadh nóiméid. Chun é sin a chosc, teastaíonn an cead “Device Control and Data Access”.";
+"Access is allowed. StatusCollapse only reads where menu bar items are." = "Tá rochtain ceadaithe. Ní léann StatusCollapse ach cá bhfuil míreanna an bharra roghchláir.";
+"Waiting for access. Turn on StatusCollapse in Privacy & Security → Device Control and Data Access. If it's already on, turn it off and on again." = "Ag fanacht le rochtain. Cas StatusCollapse air in “Privacy & Security” → “Device Control and Data Access”. Má tá sé air cheana, cas as é agus ar ais air arís.";
+"Open Privacy & Security" = "Oscail “Privacy & Security”";
+"What's New" = "Cad atá Nua";
+"Close" = "Dún";

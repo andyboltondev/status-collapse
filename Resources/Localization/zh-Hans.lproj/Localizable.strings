@@ -121,3 +121,11 @@
 "Version %@ is available." = "版本 %@ 可用。";
 "View release" = "查看发布";
 "Check now" = "立即检查";
+"Other displays" = "其他显示器";
+"Prevent click highlights" = "防止点按时高亮";
+"Clicking the empty menu bar beside the button on a display you aren't using can briefly highlight it. Preventing this needs the Device Control and Data Access permission." = "在你未使用的显示器上点按按钮旁的空白菜单栏，可能会使其短暂高亮。要防止这种情况，需要“设备控制和数据访问”权限。";
+"Access is allowed. StatusCollapse only reads where menu bar items are." = "已允许访问。StatusCollapse 只读取菜单栏项目的位置。";
+"Waiting for access. Turn on StatusCollapse in Privacy & Security → Device Control and Data Access. If it's already on, turn it off and on again." = "正在等待访问权限。请在“隐私与安全”→“设备控制和数据访问”中打开 StatusCollapse。如果已经打开，请将其关闭后再重新打开。";
+"Open Privacy & Security" = "打开“隐私与安全”";
+"What's New" = "新功能";
+"Close" = "关闭";

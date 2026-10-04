@@ -121,3 +121,11 @@
 "Version %@ is available." = "Versioon %@ on saadaval.";
 "View release" = "Vaata väljalaset";
 "Check now" = "Kontrolli kohe";
+"Other displays" = "Teised kuvad";
+"Prevent click highlights" = "Väldi klõpsamisel esiletõstmist";
+"Clicking the empty menu bar beside the button on a display you aren't using can briefly highlight it. Preventing this needs the Device Control and Data Access permission." = "Klõps tühjale menüüribale nupu kõrval kuval, mida sa ei kasuta, võib selle hetkeks esile tõsta. Selle vältimiseks on vaja luba „Device Control and Data Access”.";
+"Access is allowed. StatusCollapse only reads where menu bar items are." = "Juurdepääs on lubatud. StatusCollapse loeb ainult, kus menüüriba üksused asuvad.";
+"Waiting for access. Turn on StatusCollapse in Privacy & Security → Device Control and Data Access. If it's already on, turn it off and on again." = "Ootan luba. Lülita StatusCollapse sisse jaotises „Privacy & Security” → „Device Control and Data Access”. Kui see on juba sees, lülita see välja ja uuesti sisse.";
+"Open Privacy & Security" = "Ava „Privacy & Security”";
+"What's New" = "Uudised";
+"Close" = "Sulge";

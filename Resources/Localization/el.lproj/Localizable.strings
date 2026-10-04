@@ -121,3 +121,11 @@
 "Version %@ is available." = "Η έκδοση %@ είναι διαθέσιμη.";
 "View release" = "Προβολή έκδοσης";
 "Check now" = "Έλεγχος τώρα";
+"Other displays" = "Άλλες οθόνες";
+"Prevent click highlights" = "Αποτροπή επισήμανσης κατά το κλικ";
+"Clicking the empty menu bar beside the button on a display you aren't using can briefly highlight it. Preventing this needs the Device Control and Data Access permission." = "Ένα κλικ στην κενή γραμμή μενού δίπλα στο κουμπί, σε οθόνη που δεν χρησιμοποιείτε, μπορεί να την επισημάνει στιγμιαία. Για να αποτραπεί αυτό, απαιτείται η άδεια «Έλεγχος συσκευής και πρόσβαση σε δεδομένα».";
+"Access is allowed. StatusCollapse only reads where menu bar items are." = "Η πρόσβαση επιτρέπεται. Το StatusCollapse διαβάζει μόνο πού βρίσκονται τα στοιχεία της γραμμής μενού.";
+"Waiting for access. Turn on StatusCollapse in Privacy & Security → Device Control and Data Access. If it's already on, turn it off and on again." = "Αναμονή για πρόσβαση. Ενεργοποιήστε το StatusCollapse στο Απόρρητο και ασφάλεια → Έλεγχος συσκευής και πρόσβαση σε δεδομένα. Αν είναι ήδη ενεργό, απενεργοποιήστε το και ενεργοποιήστε το ξανά.";
+"Open Privacy & Security" = "Άνοιγμα «Απόρρητο και ασφάλεια»";
+"What's New" = "Τι νέο υπάρχει";
+"Close" = "Κλείσιμο";

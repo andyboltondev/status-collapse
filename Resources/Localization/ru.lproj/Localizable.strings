@@ -121,3 +121,11 @@
 "Version %@ is available." = "Доступна версия %@.";
 "View release" = "Открыть релиз";
 "Check now" = "Проверить сейчас";
+"Other displays" = "Другие дисплеи";
+"Prevent click highlights" = "Без подсветки при нажатии";
+"Clicking the empty menu bar beside the button on a display you aren't using can briefly highlight it. Preventing this needs the Device Control and Data Access permission." = "Нажатие на пустую строку меню рядом с кнопкой на дисплее, которым вы сейчас не пользуетесь, может ненадолго её подсветить. Чтобы этого избежать, нужно разрешение «Управление устройством и доступ к данным».";
+"Access is allowed. StatusCollapse only reads where menu bar items are." = "Доступ разрешён. StatusCollapse только определяет, где находятся объекты строки меню.";
+"Waiting for access. Turn on StatusCollapse in Privacy & Security → Device Control and Data Access. If it's already on, turn it off and on again." = "Ожидание доступа. Включите StatusCollapse в разделе «Конфиденциальность и безопасность» → «Управление устройством и доступ к данным». Если он уже включён, выключите и снова включите его.";
+"Open Privacy & Security" = "Открыть «Конфиденциальность и безопасность»";
+"What's New" = "Что нового";
+"Close" = "Закрыть";

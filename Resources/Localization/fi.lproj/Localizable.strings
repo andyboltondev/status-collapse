@@ -121,3 +121,11 @@
 "Version %@ is available." = "Versio %@ on saatavilla.";
 "View release" = "Näytä julkaisu";
 "Check now" = "Tarkista nyt";
+"Other displays" = "Muut näytöt";
+"Prevent click highlights" = "Estä napsautuskorostukset";
+"Clicking the empty menu bar beside the button on a display you aren't using can briefly highlight it. Preventing this needs the Device Control and Data Access permission." = "Tyhjän valikkopalkin napsauttaminen painikkeen vieressä näytöllä, jota et käytä, voi korostaa sen hetkeksi. Tämän estäminen vaatii Laitehallinta ja tietojen käyttö -oikeuden.";
+"Access is allowed. StatusCollapse only reads where menu bar items are." = "Käyttö on sallittu. StatusCollapse lukee vain, missä valikkopalkin kohteet ovat.";
+"Waiting for access. Turn on StatusCollapse in Privacy & Security → Device Control and Data Access. If it's already on, turn it off and on again." = "Odotetaan käyttöoikeutta. Laita StatusCollapse päälle kohdassa Tietosuoja ja suojaus → Laitehallinta ja tietojen käyttö. Jos se on jo päällä, laita se pois ja takaisin päälle.";
+"Open Privacy & Security" = "Avaa Tietosuoja ja suojaus";
+"What's New" = "Uutta";
+"Close" = "Sulje";

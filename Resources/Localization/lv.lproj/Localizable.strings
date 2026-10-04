@@ -121,3 +121,11 @@
 "Version %@ is available." = "Versija %@ ir pieejama.";
 "View release" = "Skatīt laidienu";
 "Check now" = "Pārbaudīt tagad";
+"Other displays" = "Citi displeji";
+"Prevent click highlights" = "Novērst izcelšanu klikšķinot";
+"Clicking the empty menu bar beside the button on a display you aren't using can briefly highlight it. Preventing this needs the Device Control and Data Access permission." = "Klikšķis uz tukšās izvēlņu joslas blakus pogai displejā, ko tu neizmanto, to var uz mirkli izcelt. Lai to novērstu, nepieciešama atļauja “Device Control and Data Access”.";
+"Access is allowed. StatusCollapse only reads where menu bar items are." = "Piekļuve ir atļauta. StatusCollapse tikai nolasa, kur atrodas izvēlņu joslas vienumi.";
+"Waiting for access. Turn on StatusCollapse in Privacy & Security → Device Control and Data Access. If it's already on, turn it off and on again." = "Gaida piekļuvi. Ieslēdz StatusCollapse sadaļā “Privacy & Security” → “Device Control and Data Access”. Ja tas jau ir ieslēgts, izslēdz to un ieslēdz vēlreiz.";
+"Open Privacy & Security" = "Atvērt “Privacy & Security”";
+"What's New" = "Jaunumi";
+"Close" = "Aizvērt";

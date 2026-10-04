@@ -121,3 +121,11 @@
 "Version %@ is available." = "Verzija %@ je dostupna.";
 "View release" = "Prikaži izdanje";
 "Check now" = "Provjeri sada";
+"Other displays" = "Ostali zasloni";
+"Prevent click highlights" = "Spriječi isticanje pri kliku";
+"Clicking the empty menu bar beside the button on a display you aren't using can briefly highlight it. Preventing this needs the Device Control and Data Access permission." = "Klik na praznu traku izbornika pokraj gumba na zaslonu koji ne koristite može je nakratko istaknuti. Za sprječavanje toga potrebno je dopuštenje „Upravljanje uređajem i pristup podacima”.";
+"Access is allowed. StatusCollapse only reads where menu bar items are." = "Pristup je dopušten. StatusCollapse samo očitava gdje se nalaze stavke trake izbornika.";
+"Waiting for access. Turn on StatusCollapse in Privacy & Security → Device Control and Data Access. If it's already on, turn it off and on again." = "Čeka se pristup. Uključite StatusCollapse u Privatnost i sigurnost → Upravljanje uređajem i pristup podacima. Ako je već uključen, isključite ga i ponovno uključite.";
+"Open Privacy & Security" = "Otvori Privatnost i sigurnost";
+"What's New" = "Novosti";
+"Close" = "Zatvori";

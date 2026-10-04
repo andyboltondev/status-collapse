@@ -121,3 +121,11 @@
 "Version %@ is available." = "版本 %@ 可用。";
 "View release" = "檢視發行版";
 "Check now" = "立即檢查";
+"Other displays" = "其他顯示器";
+"Prevent click highlights" = "防止點按時反白";
+"Clicking the empty menu bar beside the button on a display you aren't using can briefly highlight it. Preventing this needs the Device Control and Data Access permission." = "在你未使用的顯示器上按一下按鈕旁的空白選單列，可能會短暫反白。若要防止這種情況，需要「裝置控制和資料取用」權限。";
+"Access is allowed. StatusCollapse only reads where menu bar items are." = "已允許取用。StatusCollapse 只會讀取選單列項目的位置。";
+"Waiting for access. Turn on StatusCollapse in Privacy & Security → Device Control and Data Access. If it's already on, turn it off and on again." = "正在等待取用權限。請在「隱私權與安全性」→「裝置控制和資料取用」中開啟 StatusCollapse。若已開啟，請先關閉再重新開啟。";
+"Open Privacy & Security" = "打開「隱私權與安全性」";
+"What's New" = "新功能";
+"Close" = "關閉";

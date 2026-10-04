@@ -121,3 +121,11 @@
 "Version %@ is available." = "Versiunea %@ este disponibilă.";
 "View release" = "Vezi versiunea";
 "Check now" = "Verifică acum";
+"Other displays" = "Alte ecrane";
+"Prevent click highlights" = "Previne evidențierea la clic";
+"Clicking the empty menu bar beside the button on a display you aren't using can briefly highlight it. Preventing this needs the Device Control and Data Access permission." = "Un clic pe bara de meniu goală de lângă buton, pe un ecran pe care nu-l folosești, o poate evidenția scurt. Prevenirea necesită permisiunea „Control al dispozitivului și acces la date”.";
+"Access is allowed. StatusCollapse only reads where menu bar items are." = "Accesul este permis. StatusCollapse citește doar unde se află elementele din bara de meniu.";
+"Waiting for access. Turn on StatusCollapse in Privacy & Security → Device Control and Data Access. If it's already on, turn it off and on again." = "Se așteaptă accesul. Activează StatusCollapse în Intimitate și securitate → Control al dispozitivului și acces la date. Dacă este deja activat, dezactivează-l și activează-l din nou.";
+"Open Privacy & Security" = "Deschide Intimitate și securitate";
+"What's New" = "Noutăți";
+"Close" = "Închide";

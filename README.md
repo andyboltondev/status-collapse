@@ -21,12 +21,14 @@ its left disappears. Click it again to bring them back. Everything to the right 
 - **Reveal on hover**, and a right-click menu with Hide/Show, Settings and Quit.
 - **Auto-hide** after a delay you choose, optionally only on battery or only on mains power.
 - **Privacy**: hide the icons when the Mac locks or sleeps, or when a display is mirrored.
+- **Works across displays**, notched or not, adapting whenever displays are connected or changed.
 - **Hide the button itself** while the icons are hidden, and bring everything back with the shortcut.
 - **Launch at login**, and **export and import** of your settings.
 - **Update check**: an optional daily look for a newer release. It only links to it; nothing is
   downloaded or installed.
 - **36 languages**, defaulting to British English and following macOS.
-- **No permissions needed.** It only manages its own menu bar items.
+- **No permissions needed.** It only manages its own menu bar items. One optional setting for more
+  than one display uses the Device Control and Data Access permission (see [Behaviour](#behaviour)).
 
 ## Requirements
 
@@ -83,8 +85,9 @@ button yet, it is dimmed to show it has nothing to hide.
 
 ## Settings
 
-Open Settings from the right-click menu. It has three tabs, and the window opens tall enough to
-show a tab without scrolling (up to 80% of your screen's height). You can resize it.
+Open Settings from the right-click menu. It has three tabs, and the window resizes to fit each tab
+as you switch, so a tab shows without scrolling (up to 80% of your screen's height). You can also
+resize it yourself.
 
 ### Menu bar
 
@@ -106,6 +109,7 @@ show a tab without scrolling (up to 80% of your screen's height). You can resize
 | Reveal on hover | Shows the icons when the pointer touches the button, then hides them again after the auto-hide delay (2 seconds if auto-hide is off) |
 | Hide when the Mac locks or sleeps | So the icons are hidden when you return (on by default) |
 | Hide when mirroring a display | For projectors and AirPlay screens |
+| Prevent click highlights | With more than one display, stops a click on the empty menu bar beside the button from briefly highlighting it on a display you aren't using. Needs the **Device Control and Data Access** permission (Accessibility, before macOS 27), which turning it on asks for. Settings shows whether it's allowed and opens **Privacy & Security** for you (off by default) |
 
 ### General
 
@@ -117,7 +121,7 @@ show a tab without scrolling (up to 80% of your screen's height). You can resize
 | Export / Import | Saves your settings to a file, or loads them on another Mac. Only preferences are included, not the current state or button position |
 | Run Setup, Reset Layout, System Settings | Repeat the walkthrough, recreate a missing button, or open Menu Bar settings in System Settings |
 
-Click the version line at the bottom of Settings to see what's new in this version.
+Click the version line at the bottom of Settings to open **What's New** for this version.
 
 ## Troubleshooting
 
@@ -128,16 +132,46 @@ Click the version line at the bottom of Settings to see what's new in this versi
 - **Icons won't hide.** Only icons to the left of the button are hidden. ⌘-drag them there.
   macOS doesn't let apps move other apps' icons, so arranging is manual.
 - **Two buttons appear.** Quit any other copy first, such as an installed copy while testing a build.
+- **Clicking the empty menu bar on another display flashes a highlight.** Turn on
+  **Settings › Behaviour › Prevent click highlights** and allow StatusCollapse under
+  **System Settings › Privacy & Security › Device Control and Data Access**.
+- **Prevent click highlights keeps waiting for access, but StatusCollapse is already allowed.**
+  StatusCollapse isn't signed with a developer certificate, so macOS treats each update (or each
+  build you make yourself) as a new app. Turn StatusCollapse off and on again in that list.
 - **"Couldn't check for updates".** The check needs a published release and an internet connection.
   Turn it off under Settings › General if you prefer.
 
 ## How it works
 
-macOS lays status items out right to left. Collapsing adds a second, invisible item that shares
-the button's autosave name, which makes macOS place it immediately left of the button (and keep it
-there if the button is ⌘-dragged). That item is then made so wide (just under half the narrowest
-display) that macOS cannot fit it, so it hides that item and every item to its left. The button
-never changes size, so it can't be pushed out of view. Expanding removes the invisible item again.
+macOS lays status items out right to left. StatusCollapse keeps a few invisible items that share the
+button's autosave name, which makes macOS place them immediately left of the button (and keep them
+there if the button is ⌘-dragged). Collapsing makes each just under half as wide as the narrowest
+display, the widest an item can be before macOS ejects it from that display's menu bar, and there
+are enough of them to span the widest display, so macOS cannot fit them all. It hides the ones that
+don't fit and every item to their left. The button never changes size, so it can't be pushed out of
+view. Expanding makes the invisible items wider than half the widest display, so macOS ejects them
+from every menu bar and they take up no room.
+
+The invisible items are kept rather than added on each collapse: macOS brings a new item into each
+display's menu bar separately, so on a wide display the icons could jump left before fading out.
+For the same reason, collapsing first nudges one of the ejected items, which changes nothing on
+screen, so that the menu bar takes the rest of the changes together.
+
+A display without a notch has more free menu bar than any one item may take, so there one invisible
+item still fits beside the button. macOS draws a highlight over any status item while it's pressed,
+which would show it as a long empty bar. So while the pointer is over that item, StatusCollapse
+covers it with a clear window that takes the press and does nothing, like empty menu bar. The
+item's own hover events say where it is. macOS only sends those for the display whose menu bar is
+active, so on another display the first press there can still show the highlight. That press makes
+its menu bar the active one, and the cover works from then on.
+
+With **Prevent click highlights** on, the cover works on every display from the start.
+MenuBarAgent, the part of macOS that lays out each display's menu bar, lists what is placed where
+through the Accessibility API, which the Device Control and Data Access permission allows. So
+StatusCollapse asks it where its invisible item is on the display under the pointer. It only reads
+those positions, and only while the icons are hidden, more than one display is connected and the
+pointer is on the menu bar of a display that isn't active. Reading
+them takes about a millisecond and happens off the main thread.
 
 This relies on observed menu bar behavior rather than documented API, so it may need adjusting
 after system updates.
@@ -148,16 +182,15 @@ after system updates.
   which the hiding technique depends on. macOS 27 runs on Apple silicon only, so there is no
   Intel build.
 - **Tested on** a MacBook Pro with an M5 Pro chip and its built-in notched display, running
-  macOS 27.
-- **Displays.** The invisible item's width is worked out in points from the narrowest display, so
-  it adapts to any resolution or scaling, and it is recalculated whenever displays change. Displays
-  without a notch, external displays, and setups mixing displays of different widths have not been
-  tested.
+  macOS 27, alone and extended onto a 2560 × 1440 external display without a notch.
+- **Displays.** The invisible items' width and number are worked out in points from the narrowest
+  and widest displays, so they adapt to any resolution or scaling, and they are recalculated
+  whenever displays change. An external display used on its own has not been tested.
 
 ## Changelog and license
 
-See [CHANGELOG.md](CHANGELOG.md); the latest entry is also shown in Settings when you click the
-version line. StatusCollapse is source-available under the
+See [CHANGELOG.md](CHANGELOG.md); the latest entry is also shown in the What's New window when you
+click the version line in Settings. StatusCollapse is source-available under the
 [PolyForm Noncommercial License 1.0.0](LICENSE). You may use, modify and share it for any
 noncommercial purpose, free of charge, but you must keep the `Required Notice:` credit line and
 a copy of the license (or its URL) with anything you share. Selling it or using it commercially
@@ -167,7 +200,11 @@ restricts commercial use.
 ## Project layout
 
 - `Sources/StatusCollapse/Controller.swift`: status items, collapse logic, auto-hide
+- `Sources/StatusCollapse/MenuBarShield.swift`: the clear cover that keeps the empty menu bar beside
+  the button from highlighting when pressed
 - `Sources/StatusCollapse/Views.swift`, `AppDelegate.swift`, `main.swift`: settings UI and app setup
+- `Sources/StatusCollapse/HotKey.swift`, `UpdateCheck.swift`, `Localization.swift`: the global shortcut,
+  the update check and the 36 languages (`Resources/Localization/`)
 - `Resources/Info.plist`: app bundle metadata (menu bar only, no Dock icon)
 - `build.sh`: tests, builds, verifies and packages the app (see [Build and run](#build-and-run))
 - `tools/`: build verification (`verify-build.sh`), DMG packaging (`make-dmg.sh`, `make-dmg-background.swift`) and the icon renderer (`make-icon.swift`)

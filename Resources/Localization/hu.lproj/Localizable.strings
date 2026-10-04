@@ -121,3 +121,11 @@
 "Version %@ is available." = "A(z) %@ verzió elérhető.";
 "View release" = "Kiadás megtekintése";
 "Check now" = "Keresés most";
+"Other displays" = "Más kijelzők";
+"Prevent click highlights" = "Kattintási kiemelés megakadályozása";
+"Clicking the empty menu bar beside the button on a display you aren't using can briefly highlight it. Preventing this needs the Device Control and Data Access permission." = "Ha egy éppen nem használt kijelzőn a gomb melletti üres menüsorra kattintasz, az röviden kiemelődhet. Ennek megakadályozásához az „Eszközvezérlés és adathozzáférés” engedély szükséges.";
+"Access is allowed. StatusCollapse only reads where menu bar items are." = "A hozzáférés engedélyezve van. A StatusCollapse csak azt olvassa ki, hol vannak a menüsor elemei.";
+"Waiting for access. Turn on StatusCollapse in Privacy & Security → Device Control and Data Access. If it's already on, turn it off and on again." = "Várakozás a hozzáférésre. Kapcsold be a StatusCollapse-t itt: Adatvédelem és biztonság → Eszközvezérlés és adathozzáférés. Ha már be van kapcsolva, kapcsold ki, majd újra be.";
+"Open Privacy & Security" = "Adatvédelem és biztonság megnyitása";
+"What's New" = "Újdonságok";
+"Close" = "Bezárás";

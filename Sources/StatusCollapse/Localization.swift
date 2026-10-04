@@ -56,11 +56,14 @@ enum Strings {
     private static var table: Bundle?
     private static var base: Bundle?
     private(set) static var isRightToLeft = false
+    /// The chosen language's locale, for formatting dates in it.
+    private(set) static var locale = Locale(identifier: AppLanguage.fallback)
 
     /// Selects `choice`: an `AppLanguage` code, or `AppLanguage.system` to follow macOS.
     static func use(_ choice: String) {
         let code = choice == AppLanguage.system ? AppLanguage.resolve() : choice
         isRightToLeft = AppLanguage.named(code)?.isRightToLeft ?? false
+        locale = Locale(identifier: code)
         table = bundle(for: code)
         base = bundle(for: AppLanguage.fallback)
     }

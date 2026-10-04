@@ -121,3 +121,11 @@
 "Version %@ is available." = "संस्करण %@ उपलब्ध है।";
 "View release" = "रिलीज़ देखें";
 "Check now" = "अभी जाँचें";
+"Other displays" = "अन्य डिस्प्ले";
+"Prevent click highlights" = "क्लिक हाइलाइट रोकें";
+"Clicking the empty menu bar beside the button on a display you aren't using can briefly highlight it. Preventing this needs the Device Control and Data Access permission." = "जिस डिस्प्ले का आप इस्तेमाल नहीं कर रहे, उस पर बटन के पास खाली मेन्यू बार पर क्लिक करने से वह थोड़ी देर के लिए हाइलाइट हो सकता है। इसे रोकने के लिए “डिवाइस नियंत्रण और डेटा ऐक्सेस” अनुमति चाहिए।";
+"Access is allowed. StatusCollapse only reads where menu bar items are." = "ऐक्सेस की अनुमति है। StatusCollapse सिर्फ़ यह पढ़ता है कि मेन्यू बार आइटम कहाँ हैं।";
+"Waiting for access. Turn on StatusCollapse in Privacy & Security → Device Control and Data Access. If it's already on, turn it off and on again." = "ऐक्सेस का इंतज़ार है। गोपनीयता और सुरक्षा → डिवाइस नियंत्रण और डेटा ऐक्सेस में StatusCollapse चालू करें। अगर यह पहले से चालू है, तो इसे बंद करके फिर से चालू करें।";
+"Open Privacy & Security" = "गोपनीयता और सुरक्षा खोलें";
+"What's New" = "नया क्या है";
+"Close" = "बंद करें";

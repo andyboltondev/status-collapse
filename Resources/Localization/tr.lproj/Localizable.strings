@@ -121,3 +121,11 @@
 "Version %@ is available." = "%@ sürümü kullanılabilir.";
 "View release" = "Sürümü görüntüle";
 "Check now" = "Şimdi denetle";
+"Other displays" = "Diğer ekranlar";
+"Prevent click highlights" = "Tıklama vurgusunu engelle";
+"Clicking the empty menu bar beside the button on a display you aren't using can briefly highlight it. Preventing this needs the Device Control and Data Access permission." = "Kullanmadığınız bir ekranda düğmenin yanındaki boş menü çubuğuna tıklamak onu kısa süreliğine vurgulayabilir. Bunu engellemek için “Aygıt Denetimi ve Veri Erişimi” izni gerekir.";
+"Access is allowed. StatusCollapse only reads where menu bar items are." = "Erişime izin verildi. StatusCollapse yalnızca menü çubuğu öğelerinin nerede olduğunu okur.";
+"Waiting for access. Turn on StatusCollapse in Privacy & Security → Device Control and Data Access. If it's already on, turn it off and on again." = "Erişim bekleniyor. Gizlilik ve Güvenlik → Aygıt Denetimi ve Veri Erişimi bölümünde StatusCollapse’i açın. Zaten açıksa kapatıp yeniden açın.";
+"Open Privacy & Security" = "Gizlilik ve Güvenlik’i Aç";
+"What's New" = "Yenilikler";
+"Close" = "Kapat";

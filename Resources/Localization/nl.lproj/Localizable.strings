@@ -121,3 +121,11 @@
 "Version %@ is available." = "Versie %@ is beschikbaar.";
 "View release" = "Release bekijken";
 "Check now" = "Nu zoeken";
+"Other displays" = "Andere schermen";
+"Prevent click highlights" = "Klikmarkering voorkomen";
+"Clicking the empty menu bar beside the button on a display you aren't using can briefly highlight it. Preventing this needs the Device Control and Data Access permission." = "Klikken op de lege menubalk naast de knop op een scherm dat je niet gebruikt, kan die kort markeren. Om dat te voorkomen is de toestemming ‘Apparaatbeheer en gegevenstoegang’ nodig.";
+"Access is allowed. StatusCollapse only reads where menu bar items are." = "Toegang is toegestaan. StatusCollapse leest alleen waar onderdelen in de menubalk staan.";
+"Waiting for access. Turn on StatusCollapse in Privacy & Security → Device Control and Data Access. If it's already on, turn it off and on again." = "Wachten op toegang. Zet StatusCollapse aan in Privacy en beveiliging → Apparaatbeheer en gegevenstoegang. Staat het al aan, zet het dan uit en weer aan.";
+"Open Privacy & Security" = "Open Privacy en beveiliging";
+"What's New" = "Nieuw";
+"Close" = "Sluit";

@@ -138,13 +138,13 @@ enum AutoHidePower: String, CaseIterable, Identifiable {
 
 /// Owns the menu bar button and the collapse state.
 ///
-/// macOS lays status items out right-to-left and lets users Cmd-drag them. Collapsing adds a
-/// second, invisible item, the hider, under the button's autosave name: macOS 27 puts an item
-/// whose name is already taken just left of the item that owns it, and keeps it there when the
-/// button is dragged. The hider is then made too wide to fit anywhere, so macOS hides it together
-/// with every icon to its left. The button itself never changes size, so it can never be pushed
-/// out, and anything right of it (Control Center, the clock, ...) is never touched. Expanding
-/// removes the hider, so it takes up no room while the icons are shown.
+/// macOS lays status items out right-to-left and lets users Cmd-drag them. Hiding uses invisible
+/// items, the hiders, under the button's autosave name: macOS 27 puts an item whose name is
+/// already taken just left of the item that owns it, and keeps it there when the button is
+/// dragged. Collapsing makes the hiders too wide to fit, so macOS hides them together with every
+/// icon to their left. The button itself never changes size, so it can never be pushed out, and
+/// anything right of it (Control Center, the clock, ...) is never touched. Expanding parks the
+/// hiders: made wider still, they are ejected from the menu bar and take up no room.
 @MainActor
 @Observable
 final class Controller {
@@ -176,11 +176,12 @@ final class Controller {
         static let lastUpdateCheck = "lastUpdateCheck"
         static let layoutVersion = "layoutVersion"
         static let rolesSwapped = "rolesSwapped"
+        static let coverOtherDisplays = "coverOtherDisplays"
 
         /// What export and import carry: the preferences, not the state (collapsed, layout).
         static let portable = [autoHideSeconds, autoHidePower, iconStyle, iconSize, iconWeight, customCollapsed,
                                customExpanded, collapsedOpacity, buttonVisibility, hoverReveal, collapseOnLock,
-                               collapseOnMirroring, hotkeyEnabled, hotkey, language, updateChecks]
+                               collapseOnMirroring, hotkeyEnabled, hotkey, language, updateChecks, coverOtherDisplays]
     }
 
     /// Set once launching finishes, so loading settings doesn't act on a button that isn't there yet.
@@ -202,6 +203,24 @@ final class Controller {
     var collapseOnMirroring = false {
         didSet { guard ready else { return }; defaults.set(collapseOnMirroring, forKey: Key.collapseOnMirroring) }
     }
+    /// Whether to use Accessibility to keep pressing the empty menu bar beside the button from
+    /// highlighting it on displays whose menu bar isn't active; see `MenuBarShield`. Off until
+    /// asked for, since it needs the permission, which turning it on asks for.
+    var coverOtherDisplays = false {
+        didSet {
+            guard ready else { return }
+            defaults.set(coverOtherDisplays, forKey: Key.coverOtherDisplays)
+            if coverOtherDisplays, !AXIsProcessTrusted() {
+                // The value of kAXTrustedCheckOptionPrompt, which Swift 6 won't read as a global.
+                // macOS shows its prompt only the first time; Settings links to the list after that.
+                AXIsProcessTrustedWithOptions(["AXTrustedCheckOptionPrompt": true] as CFDictionary)
+            }
+            refreshAccessibility()
+        }
+    }
+    /// Whether macOS lets the app use Accessibility. It is granted in System Settings, which says
+    /// nothing when it changes, so it is read again when apps switch and while Settings waits on it.
+    private(set) var accessibilityAllowed = AXIsProcessTrusted()
     var iconStyle = IconStyle.native {
         didSet { guard ready else { return }; defaults.set(iconStyle.rawValue, forKey: Key.iconStyle); glyphSizingChanged() }
     }
@@ -288,13 +307,19 @@ final class Controller {
     @ObservationIgnored private let glyphView = GlyphView()
     /// Watches for the pointer touching the button while collapsed; see `updateHoverWatch`.
     @ObservationIgnored private var hoverTask: Task<Void, Never>?
-    /// Only exists while collapsed.
-    @ObservationIgnored private var hider: NSStatusItem?
+    /// Re-reads the Accessibility permission while Settings is open and waiting on it.
+    @ObservationIgnored private var accessibilityWatch: Task<Void, Never>?
+    /// Kept for good once created, parked while the icons are shown; see `parkHiders`.
+    @ObservationIgnored private var hiders: [NSStatusItem] = []
+    /// Keeps a hider that fits beside the button from showing when pressed.
+    @ObservationIgnored private let shield = MenuBarShield()
     /// The hide that follows the start of a collapse animation; see `hideDelay`.
     @ObservationIgnored private var hideTask: Task<Void, Never>?
     @ObservationIgnored private var autoHideTask: Task<Void, Never>?
     /// Re-checks whether anything sits left of the button; see `updateGlyphAlpha`.
     @ObservationIgnored private var dimTask: Task<Void, Never>?
+    /// The redraw that updates the button on other displays; see `refreshCopies`.
+    @ObservationIgnored private var copiesTask: Task<Void, Never>?
     /// How many items sat left of the button when last counted, for the tooltip.
     @ObservationIgnored private var hiddenCount = 0
     /// While the hotkey is being recorded it is unregistered, or pressing it would just toggle.
@@ -317,6 +342,12 @@ final class Controller {
     private static let expandSpeed = 1.4
     private static let collapseSpeed = 1.0
     private static let hideDelay = Duration.milliseconds(50)
+    /// How long the menu bar gets to start on a parked hider's nudge before the hiders follow; see
+    /// `render`. With an external display, 1 to 15 ms kept the hiders together and 40 ms did not.
+    private static let nudgeLead = Duration.milliseconds(5)
+    /// Long enough for the glyph's transition to finish: a copy taken 150 ms in caught it halfway,
+    /// one taken at 600 ms had the new glyph.
+    private static let copiesDelay = Duration.milliseconds(750)
     private static let autoHideTick = Duration.milliseconds(500)
     private static let dimTick = Duration.seconds(1)
     private static let hoverTick = Duration.milliseconds(100)
@@ -331,7 +362,9 @@ final class Controller {
         Strings.use(language)
 
         createButton()
+        shield.buttonWindow = { [weak self] in self?.button?.button?.window }
         ready = true
+        refreshAccessibility()
         render()
         updateAutoHide()
         updateHoverWatch()
@@ -352,6 +385,7 @@ final class Controller {
         hoverReveal = flag(Key.hoverReveal, false)
         collapseOnLock = flag(Key.collapseOnLock, true)
         collapseOnMirroring = flag(Key.collapseOnMirroring, false)
+        coverOtherDisplays = flag(Key.coverOtherDisplays, false)
         iconStyle = raw(Key.iconStyle, .native)
         iconSize = raw(Key.iconSize, .regular)
         iconWeight = raw(Key.iconWeight, .regular)
@@ -427,11 +461,13 @@ final class Controller {
         // Opening shows the icons, but that isn't a choice to restore when the window closes.
         collapseAfterSettings = before
         updateGlyphAlpha()
+        refreshAccessibility()
     }
 
     func settingsDidClose() {
         guard let collapse = collapseAfterSettings else { return }
         collapseAfterSettings = nil
+        refreshAccessibility()
         updateGlyphAlpha()
         if collapse { setCollapsed(true) } else { updateAutoHide() }
     }
@@ -445,7 +481,11 @@ final class Controller {
         defaults.set(false, forKey: Key.collapsed)
         buttonVisibility = .always
         updateHoverWatch()
-        removeHider()
+        // The hiders share the old name, so they go too; rendering adds new ones under the new name.
+        hideTask?.cancel()
+        shield.lift()
+        for hider in hiders { NSStatusBar.system.removeStatusItem(hider) }
+        hiders = []
         if let button { NSStatusBar.system.removeStatusItem(button) }
         createButton()
         render()
@@ -457,8 +497,14 @@ final class Controller {
         setCollapsed(!isCollapsed)
     }
 
-    /// Brings the tooltip, glyph and hider in line with `isCollapsed`. Animated changes play the
+    /// Brings the tooltip, glyph and hiders in line with `isCollapsed`. Animated changes play the
     /// glyph transition, and a collapse hides the icons a beat after it starts.
+    ///
+    /// MenuBarAgent, which lays out the menu bar, takes the first change it hears about straight
+    /// away and the ones that arrive while it is busy with that together. One hider is too narrow
+    /// to hide anything on a wide display without a notch, so a display drawn with only some of
+    /// them back shows its icons jumping left before they fade. So a parked hider is nudged first,
+    /// which changes nothing on screen, and the hiders follow while the menu bar is busy with it.
     private func render(animated: Bool = false) {
         guard let button = button?.button else { return }
         let label = isCollapsed ? L("Show hidden menu bar icons") : L("Hide menu bar icons")
@@ -466,15 +512,21 @@ final class Controller {
         button.setAccessibilityLabel(label)
 
         hideTask?.cancel()
+        shield.hidingIcons = isCollapsed
         if !isCollapsed {
-            removeHider()
+            // Parked hiders keep their old frames, so the cover can't tell they've gone.
+            shield.lift()
+            parkHiders()
         } else if animated {
             hideTask = Task { [weak self] in
                 try? await Task.sleep(for: Self.hideDelay)
-                if !Task.isCancelled { self?.showHider() }
+                guard !Task.isCancelled, let self else { return }
+                if let hider = hiders.first, hider.length >= parkedLength { hider.length += 1 }
+                try? await Task.sleep(for: Self.nudgeLead, tolerance: .milliseconds(1))
+                if !Task.isCancelled { showHiders() }
             }
         } else {
-            showHider()
+            showHiders()
         }
 
         glyphView.symbolConfiguration = symbolConfiguration
@@ -495,6 +547,18 @@ final class Controller {
             }
         }
         updateGlyphAlpha()
+        refreshCopies()
+    }
+
+    /// Menu bars on other displays show a copy of the button, a snapshot of it as drawn, which
+    /// macOS retakes when the button itself redraws but not when the glyph view on top of it
+    /// changes. So once the glyph has settled, the button is redrawn.
+    private func refreshCopies() {
+        copiesTask?.cancel()
+        copiesTask = Task { [weak self] in
+            try? await Task.sleep(for: Self.copiesDelay)
+            if !Task.isCancelled { self?.button?.button?.needsDisplay = true }
+        }
     }
 
     /// The size and weight the user chose, or nil for the system's own look.
@@ -524,19 +588,22 @@ final class Controller {
 
     /// Sets how visible the glyph is. While the icons are shown and nothing is left of the button
     /// to hide, it is dimmed like a disabled control (it still works: it can be dragged and
-    /// right-clicked). While collapsed, the hider's own state says nothing about what it hides, so
+    /// right-clicked). While collapsed, the hiders' own state says nothing about what they hide, so
     /// it takes the user's collapsed opacity. The user can also hide the glyph.
     private func updateGlyphAlpha() {
+        let alpha: CGFloat
         if buttonVisibility == .whenExpanded && isCollapsed {
-            glyphView.alphaValue = 0
-            return
-        }
-        if isCollapsed {
-            glyphView.alphaValue = collapsedOpacity
+            alpha = 0
+        } else if isCollapsed {
+            alpha = collapsedOpacity
         } else {
-            if let count = itemsLeftOfButton { hiddenCount = count }
-            glyphView.alphaValue = itemsLeftOfButton == 0 ? Self.dimmedAlpha : 1
+            let count = itemsLeftOfButton
+            if let count { hiddenCount = count }
+            alpha = count == 0 ? Self.dimmedAlpha : 1
         }
+        guard glyphView.alphaValue != alpha else { return }
+        glyphView.alphaValue = alpha
+        refreshCopies()
     }
 
     /// How many other status items are on screen to the left of the button, on the same bar, or
@@ -559,12 +626,26 @@ final class Controller {
     }
 
     /// macOS 27 ejects any item whose window (length plus 16 pt of chrome) reaches half the width
-    /// of the narrowest display, which would un-hide everything. Just under that, the hider is
-    /// too wide to fit or to be parked behind the system overflow chevron, so macOS hides it and
-    /// every item to its left. Measured on a notched display; displays without one are untested.
+    /// of a display from that display's menu bar, so the narrowest display sets the limit. Just
+    /// under it, a hider is too wide to be parked behind the system overflow chevron, so when it
+    /// doesn't fit macOS hides it and every item to its left.
     private var collapsedLength: CGFloat {
         let narrowest = NSScreen.screens.map(\.frame.width).min() ?? 1440
         return (narrowest / 2 - 17).rounded(.down)
+    }
+
+    /// Comfortably past the limit on the widest display, so the hiders are ejected from every menu
+    /// bar and take up no room.
+    private var parkedLength: CGFloat {
+        let widest = NSScreen.screens.map(\.frame.width).max() ?? 1440
+        return (widest / 2 + 50).rounded(.up)
+    }
+
+    /// Next to a notch, one hider is too wide to fit, but a display without one has room for far
+    /// more. Enough hiders side by side span the widest display, so some never fit.
+    private var hiderCount: Int {
+        let widest = NSScreen.screens.map(\.frame.width).max() ?? 1440
+        return max(1, Int((widest / collapsedLength).rounded(.up)))
     }
 
     /// Adds the button under its autosave name, which makes macOS put it back where it was saved.
@@ -587,23 +668,29 @@ final class Controller {
         button = item
     }
 
-    /// Adds the hider, or resizes it for the current displays. It is created at normal size and
-    /// widened in the same pass, before macOS draws it: an item created already wide is ejected
-    /// instead of hiding anything, and one shown at normal size first would shove every icon
-    /// sideways for a few frames before they fade out.
-    private func showHider() {
-        if hider == nil {
+    /// Hides the icons by making the hiders too wide to fit.
+    private func showHiders() { setHiders(collapsedLength) }
+
+    /// Shows the icons by ejecting the hiders. They are kept rather than removed: macOS 27 brings
+    /// a new item into each display's menu bar separately, so hiders added on every collapse could
+    /// reach a wide display one at a time, with its icons jumping left before they fade.
+    private func parkHiders() { setHiders(parkedLength) }
+
+    /// Adds or removes hiders to suit the current displays, then gives them all `length`. A new
+    /// one is created at normal size and resized in the same pass, before macOS draws it: one
+    /// created already wide is ejected, and one shown at normal size first would shove every icon
+    /// sideways for a few frames.
+    private func setHiders(_ length: CGFloat) {
+        let count = hiderCount
+        while hiders.count > count { NSStatusBar.system.removeStatusItem(hiders.removeLast()) }
+        while hiders.count < count {
             let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
             item.autosaveName = buttonName
             item.button?.setAccessibilityElement(false)
-            hider = item
+            shield.watch(item)
+            hiders.append(item)
         }
-        hider?.length = collapsedLength
-    }
-
-    private func removeHider() {
-        if let hider { NSStatusBar.system.removeStatusItem(hider) }
-        hider = nil
+        for hider in hiders where hider.length != length { hider.length = length }
     }
 
     // MARK: Glyph
@@ -724,16 +811,27 @@ final class Controller {
         }
     }
 
-    /// Screen lock, sleep and display mirroring, plus the displays attached (the collapsed width
-    /// depends on them).
+    /// Screen lock, sleep and display mirroring, plus the displays attached (the hiders' number
+    /// and lengths depend on them).
     private func observeSystem() {
         NotificationCenter.default.addObserver(
             forName: NSApplication.didChangeScreenParametersNotification, object: nil, queue: .main
         ) { [weak self] _ in
             MainActor.assumeIsolated {
                 guard let self else { return }
+                self.shield.updateOtherDisplays()
                 self.render()
                 if self.collapseOnMirroring, Self.isMirroring { self.collapseForPrivacy() }
+            }
+        }
+        // Another app's menus, or another space's menu bar, may now reach where the cover is.
+        for name in [NSWorkspace.didActivateApplicationNotification, NSWorkspace.activeSpaceDidChangeNotification] {
+            NSWorkspace.shared.notificationCenter.addObserver(forName: name, object: nil, queue: .main) { [weak self] _ in
+                MainActor.assumeIsolated {
+                    self?.shield.lift()
+                    // Coming back from System Settings, Accessibility may have been allowed.
+                    self?.refreshAccessibility()
+                }
             }
         }
         for name in [NSWorkspace.willSleepNotification, NSWorkspace.screensDidSleepNotification] {
@@ -746,6 +844,31 @@ final class Controller {
         ) { [weak self] _ in
             MainActor.assumeIsolated { if self?.collapseOnLock == true { self?.collapseForPrivacy() } }
         }
+    }
+
+    // MARK: Accessibility
+
+    /// Re-reads the Accessibility permission and tells the cover whether it may use it. While
+    /// Settings is open and waiting on the permission, keeps checking, so the window updates as
+    /// soon as it is allowed.
+    private func refreshAccessibility() {
+        accessibilityAllowed = AXIsProcessTrusted()
+        shield.usesAccessibility = coverOtherDisplays && accessibilityAllowed
+        accessibilityWatch?.cancel()
+        accessibilityWatch = nil
+        guard coverOtherDisplays, !accessibilityAllowed, collapseAfterSettings != nil else { return }
+        accessibilityWatch = Task { [weak self] in
+            while !Task.isCancelled {
+                try? await Task.sleep(for: .seconds(1), tolerance: .milliseconds(500))
+                guard let self, !Task.isCancelled else { return }
+                if AXIsProcessTrusted() { return refreshAccessibility() }
+            }
+        }
+    }
+
+    /// Opens the Accessibility list in System Settings, where the permission is turned on.
+    func openAccessibilitySettings() {
+        NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.settings.PrivacySecurity.extension?Privacy_Accessibility")!)
     }
 
     /// True while any display shows another's picture, as when presenting on a projector or AirPlay.

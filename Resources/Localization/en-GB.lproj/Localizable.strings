@@ -121,3 +121,11 @@
 "Version %@ is available." = "Version %@ is available.";
 "View release" = "View release";
 "Check now" = "Check now";
+"Other displays" = "Other displays";
+"Prevent click highlights" = "Prevent click highlights";
+"Clicking the empty menu bar beside the button on a display you aren't using can briefly highlight it. Preventing this needs the Device Control and Data Access permission." = "Clicking the empty menu bar beside the button on a display you aren't using can briefly highlight it. Preventing this needs the Device Control and Data Access permission.";
+"Access is allowed. StatusCollapse only reads where menu bar items are." = "Access is allowed. StatusCollapse only reads where menu bar items are.";
+"Waiting for access. Turn on StatusCollapse in Privacy & Security → Device Control and Data Access. If it's already on, turn it off and on again." = "Waiting for access. Turn on StatusCollapse in Privacy & Security → Device Control and Data Access. If it's already on, turn it off and on again.";
+"Open Privacy & Security" = "Open Privacy & Security";
+"What's New" = "What's New";
+"Close" = "Close";

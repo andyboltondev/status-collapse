@@ -121,3 +121,11 @@
 "Version %@ is available." = "Verżjoni %@ hija disponibbli.";
 "View release" = "Ara r-rilaxx";
 "Check now" = "Iċċekkja issa";
+"Other displays" = "Skrins oħra";
+"Prevent click highlights" = "Evita l-enfasi meta tikklikkja";
+"Clicking the empty menu bar beside the button on a display you aren't using can briefly highlight it. Preventing this needs the Device Control and Data Access permission." = "Klikk fuq il-bar tal-menu vojt ħdejn il-buttuna fuq skrin li m’intix tuża jista’ jenfasizzah għal mument. Biex tevita dan, hemm bżonn il-permess “Device Control and Data Access”.";
+"Access is allowed. StatusCollapse only reads where menu bar items are." = "L-aċċess huwa permess. StatusCollapse jaqra biss fejn jinsabu l-oġġetti tal-bar tal-menu.";
+"Waiting for access. Turn on StatusCollapse in Privacy & Security → Device Control and Data Access. If it's already on, turn it off and on again." = "Qed nistennew l-aċċess. Ixgħel StatusCollapse f’“Privacy & Security” → “Device Control and Data Access”. Jekk diġà mixgħul, itfih u erġa’ ixgħlu.";
+"Open Privacy & Security" = "Iftaħ “Privacy & Security”";
+"What's New" = "X’hemm ġdid";
+"Close" = "Agħlaq";

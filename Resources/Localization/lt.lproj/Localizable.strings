@@ -121,3 +121,11 @@
 "Version %@ is available." = "Versija %@ yra prieinama.";
 "View release" = "Peržiūrėti išleidimą";
 "Check now" = "Tikrinti dabar";
+"Other displays" = "Kiti ekranai";
+"Prevent click highlights" = "Neleisti paryškinti spustelėjus";
+"Clicking the empty menu bar beside the button on a display you aren't using can briefly highlight it. Preventing this needs the Device Control and Data Access permission." = "Spustelėjus tuščią meniu juostą šalia mygtuko ekrane, kurio nenaudojate, ji gali trumpam paryškėti. Kad to išvengtumėte, reikia leidimo „Device Control and Data Access“.";
+"Access is allowed. StatusCollapse only reads where menu bar items are." = "Prieiga leidžiama. StatusCollapse tik nuskaito, kur yra meniu juostos elementai.";
+"Waiting for access. Turn on StatusCollapse in Privacy & Security → Device Control and Data Access. If it's already on, turn it off and on again." = "Laukiama prieigos. Įjunkite StatusCollapse skiltyje „Privacy & Security“ → „Device Control and Data Access“. Jei jau įjungta, išjunkite ir vėl įjunkite.";
+"Open Privacy & Security" = "Atidaryti „Privacy & Security“";
+"What's New" = "Naujienos";
+"Close" = "Uždaryti";

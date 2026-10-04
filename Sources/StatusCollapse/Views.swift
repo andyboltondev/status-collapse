@@ -84,7 +84,7 @@ private struct WizardView: View {
     private var arrange: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text(L("Choose which icons to hide")).font(.title2.bold())
-            withIcon("Look for the %@ button in your menu bar.", controller.iconStyle.symbol(collapsed: false))
+            withIcon("Look for the %@ button in your menu bar.", controller.iconStyle.symbol(collapsed: true))
             VStack(alignment: .leading, spacing: 6) {
                 md(L("1. Hold ⌘ and drag icons to the **left** of the button to hide them. You can ⌘-drag the button too."))
                 md(L("2. Collapsing hides everything left of the button. Icons to its right always stay visible."))
@@ -101,7 +101,7 @@ private struct WizardView: View {
         VStack(alignment: .leading, spacing: 12) {
             Text(L("You're all set")).font(.title2.bold())
             withIcon("Click the %@ button to hide or show icons. Right-click it for Settings and Quit.",
-                     controller.iconStyle.symbol(collapsed: false))
+                     controller.iconStyle.symbol(collapsed: true))
             if controller.hotkeyEnabled && !controller.hotkeyConflict {
                 Text(L("Or press %@ from anywhere.", controller.hotkey.display))
             }
@@ -114,32 +114,198 @@ private struct WizardView: View {
     }
 }
 
-// MARK: - Window sizing
+// MARK: - Changelog
 
-private struct TabHeightsKey: PreferenceKey {
-    static let defaultValue: [Int: CGFloat] = [:]
-    static func reduce(value: inout [Int: CGFloat], nextValue: () -> [Int: CGFloat]) {
-        value.merge(nextValue()) { $1 }
+/// The app's icon as drawn in its windows: the chevron on a teal tile.
+private struct AppBadge: View {
+    var body: some View {
+        Image(systemName: "chevron.left.2")
+            .font(.system(size: 22, weight: .bold))
+            .foregroundStyle(.white)
+            .frame(width: 44, height: 44)
+            .background(
+                LinearGradient(colors: [Color(red: 0.18, green: 0.83, blue: 0.75), Color(red: 0.05, green: 0.45, blue: 0.56)],
+                               startPoint: .top, endPoint: .bottom),
+                in: RoundedRectangle(cornerRadius: 10, style: .continuous))
     }
 }
 
-/// Resizes the hosting window to `height` when it first becomes known and whenever it changes
-/// (a longer translation, say), so the tabs fit without scrolling. Resizing it by hand still works.
-private struct WindowSizer: NSViewRepresentable {
-    let height: CGFloat?
+/// The newest section of the bundled CHANGELOG.md: its heading (`1.0.0 - 2026-10-03`), any
+/// paragraphs before the first group, and groups of bullets under bold titles.
+private struct ReleaseNotes {
+    struct Group: Identifiable {
+        let id: Int
+        var title: String?
+        var items: [String] = []
+    }
+    var version = ""
+    var date: Date?
+    var intro: [String] = []
+    var groups: [Group] = []
 
-    final class Coordinator { var applied: CGFloat? }
+    static let latest: ReleaseNotes? = {
+        guard let text = Bundle.main.url(forResource: "CHANGELOG", withExtension: "md")
+                .flatMap({ try? String(contentsOf: $0, encoding: .utf8) }),
+              let section = text.components(separatedBy: "\n## ").dropFirst().first else { return nil }
+        let lines = section.split(separator: "\n").map { $0.trimmingCharacters(in: .whitespaces) }.filter { !$0.isEmpty }
+        guard let heading = lines.first else { return nil }
+        var notes = ReleaseNotes()
+        let parts = heading.components(separatedBy: " - ")
+        notes.version = parts[0]
+        notes.date = parts.count > 1 ? try? Date(parts[1], strategy: .iso8601.year().month().day()) : nil
+        for line in lines.dropFirst() {
+            if line.hasPrefix("**"), line.hasSuffix("**"), line.count > 4 {
+                notes.groups.append(Group(id: notes.groups.count, title: String(line.dropFirst(2).dropLast(2))))
+            } else if line.hasPrefix("- ") {
+                if notes.groups.isEmpty { notes.groups.append(Group(id: 0)) }
+                notes.groups[notes.groups.count - 1].items.append(String(line.dropFirst(2)))
+            } else {
+                notes.intro.append(line)
+            }
+        }
+        return notes
+    }()
+}
+
+/// What's new in the running version: a header, the notes in groups, and a Close button.
+private struct ChangelogView: View {
+    let notes: ReleaseNotes?
+    let close: () -> Void
+
+    var body: some View {
+        VStack(spacing: 0) {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 18) {
+                    HStack(spacing: 12) {
+                        AppBadge()
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("StatusCollapse \(notes?.version ?? "")").font(.title3.bold())
+                            if let date = notes?.date {
+                                Text(date.formatted(Date.FormatStyle(date: .long, time: .omitted).locale(Strings.locale)))
+                                    .font(.callout).foregroundStyle(.secondary)
+                            }
+                        }
+                    }
+                    ForEach(notes?.intro ?? [], id: \.self) { md($0).foregroundStyle(.secondary) }
+                    ForEach(notes?.groups ?? []) { group in
+                        VStack(alignment: .leading, spacing: 6) {
+                            if let title = group.title { Text(title).font(.headline) }
+                            ForEach(group.items, id: \.self) { item in
+                                HStack(alignment: .firstTextBaseline, spacing: 8) {
+                                    Text(verbatim: "•").foregroundStyle(.secondary)
+                                    md(item).fixedSize(horizontal: false, vertical: true)
+                                }
+                            }
+                        }
+                    }
+                }
+                .font(.callout)
+                .textSelection(.enabled)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(20)
+            }
+            Divider()
+            HStack {
+                Spacer()
+                Button(L("Close"), action: close).keyboardShortcut(.defaultAction)
+            }
+            .padding(12)
+        }
+        .frame(minWidth: 360, minHeight: 300)
+    }
+}
+
+/// The release notes in a small window of their own, reused while open.
+@MainActor
+private enum ChangelogWindow {
+    private static var window: NSWindow?
+
+    static func show() {
+        if window == nil {
+            let new = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 420, height: 520),
+                               styleMask: [.titled, .closable, .resizable], backing: .buffered, defer: true)
+            new.isReleasedWhenClosed = false
+            new.center()
+            window = new
+        }
+        guard let window else { return }
+        // Rebuilt each time, so it follows the language chosen in Settings.
+        window.title = L("What's New")
+        window.contentView = NSHostingView(rootView: ChangelogView(notes: .latest) { window.close() }
+            .environment(\.layoutDirection, Strings.isRightToLeft ? .rightToLeft : .leftToRight))
+        window.makeKeyAndOrderFront(nil)
+        NSApp.activate()
+    }
+}
+
+// MARK: - Window sizing
+
+/// For each tab, the height its content needs and the height its scroll view is showing, measured
+/// in place. Kept per tab because the tab view keeps every tab laid out, not just the selected one.
+private struct TabFitKey: PreferenceKey {
+    static let defaultValue: [Int: TabFit] = [:]
+    static func reduce(value: inout [Int: TabFit], nextValue: () -> [Int: TabFit]) {
+        for (tab, next) in nextValue() {
+            value[tab, default: TabFit()].content = next.content ?? value[tab]?.content
+            value[tab, default: TabFit()].visible = next.visible ?? value[tab]?.visible
+        }
+    }
+}
+
+private struct TabFit: Equatable {
+    var content: CGFloat?
+    var visible: CGFloat?
+}
+
+/// The settings view's whole height, measured in the same layout pass as the tabs.
+private struct RootHeightKey: PreferenceKey {
+    static let defaultValue: CGFloat? = nil
+    static func reduce(value: inout CGFloat?, nextValue: () -> CGFloat?) { value = nextValue() ?? value }
+}
+
+/// Sizes the hosting window to the selected tab: the room outside the tab's scroll view, which is
+/// the same on every tab, plus what the tab's content needs. So each tab fits exactly, with the
+/// same margins, and scrolls only past `maxShare` of the screen. Both come from one layout pass, so
+/// they agree even while the window is animating. It acts when the tab, its content or that room
+/// changes, not when the window is resized by hand, which changes neither. The top edge stays put,
+/// as in System Settings, and the change animates once the window is showing.
+private struct WindowSizer: NSViewRepresentable {
+    let tab: Int
+    let fit: TabFit
+    let rootHeight: CGFloat?
+    let minHeight: CGFloat
+    let maxShare: CGFloat
+
+    final class Coordinator {
+        var latest: (tab: Int, content: CGFloat, room: CGFloat)?
+        var applied: (tab: Int, content: CGFloat, room: CGFloat)?
+        var scheduled = false
+    }
     func makeCoordinator() -> Coordinator { Coordinator() }
     func makeNSView(context: Context) -> NSView { NSView() }
 
     func updateNSView(_ view: NSView, context: Context) {
-        guard let height, height != context.coordinator.applied else { return }
-        context.coordinator.applied = height
-        DispatchQueue.main.async {
-            guard let window = view.window else { return }
-            var size = window.contentLayoutRect.size
-            size.height = height
-            window.setContentSize(size)
+        guard let content = fit.content, let visible = fit.visible, let rootHeight else { return }
+        let coordinator = context.coordinator
+        coordinator.latest = (tab, content, rootHeight - visible)
+        // A switch reports in more than one pass; act on where they settle.
+        guard !coordinator.scheduled else { return }
+        coordinator.scheduled = true
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.03) { [minHeight, maxShare] in
+            coordinator.scheduled = false
+            guard let window = view.window, let latest = coordinator.latest else { return }
+            if let applied = coordinator.applied, applied.tab == latest.tab,
+               abs(applied.content - latest.content) < 1, abs(applied.room - latest.room) < 1 { return }
+            coordinator.applied = latest
+            var frame = window.frame
+            let current = window.contentRect(forFrameRect: frame).height
+            let screen = (window.screen ?? NSScreen.main)?.visibleFrame.height ?? 900
+            let target = max(minHeight, min(latest.room + latest.content, (screen * maxShare).rounded(.down)))
+            let delta = target - current
+            guard abs(delta) >= 1 else { return }
+            frame.size.height += delta
+            frame.origin.y -= delta
+            window.setFrame(frame, display: true, animate: window.isVisible)
         }
     }
 }
@@ -150,77 +316,50 @@ private struct WindowSizer: NSViewRepresentable {
 private struct SettingsView: View {
     @Bindable var controller: Controller
     let rerunSetup: () -> Void
-    @State private var showChangelog = false
 
-    /// Natural height of each tab's content, the height of the window outside the tab area, and
-    /// the tab area's width, all measured so the window can be sized to show a tab without scrolling.
-    @State private var tabHeights: [Int: CGFloat] = [:]
-
-    /// Everything in the window beyond the header, footer and a tab's content: the window padding,
-    /// the gaps between the parts, and the tab control's own bar and margins.
-    private static let fixedChrome: CGFloat = 40 + 24 + 30
-    /// Widths the header, footer and tab content are laid out at, for measuring them.
-    private static let outerWidth: CGFloat = 500
-    private static let innerWidth: CGFloat = 476
+    /// The selected tab's measured heights, which size the window.
+    @State private var fits: [Int: TabFit] = [:]
+    @State private var rootHeight: CGFloat?
 
     private static let minimumSize = CGSize(width: 540, height: 380)
-    /// The window opens as tall as its content needs, but no taller than this share of the screen.
+    /// The window grows to fit the selected tab, but no taller than this share of the screen.
     private static let screenShare = 0.8
-
-    /// The window height that shows the tallest tab in full, or nil until it has been measured.
-    private var fittingHeight: CGFloat? {
-        guard tabHeights.count == 5, let tallest = (0...2).compactMap({ tabHeights[$0] }).max() else { return nil }
-        let chrome = tabHeights[3, default: 0] + tabHeights[4, default: 0] + Self.fixedChrome
-        let screen = NSScreen.main?.visibleFrame.height ?? 900
-        return max(Self.minimumSize.height, min(chrome + tallest, (screen * Self.screenShare).rounded(.down)))
-    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             header
             TabView(selection: $controller.settingsTab) {
-                tab { menuBarTab }.tabItem { Label(L("Menu bar"), systemImage: "menubar.rectangle") }.tag(0)
-                tab { behaviourTab }.tabItem { Label(L("Behaviour"), systemImage: "slider.horizontal.3") }.tag(1)
-                tab { generalTab }.tabItem { Label(L("General"), systemImage: "gearshape") }.tag(2)
+                tab(0) { menuBarTab }.tabItem { Label(L("Menu bar"), systemImage: "menubar.rectangle") }.tag(0)
+                tab(1) { behaviourTab }.tabItem { Label(L("Behaviour"), systemImage: "slider.horizontal.3") }.tag(1)
+                tab(2) { generalTab }.tabItem { Label(L("General"), systemImage: "gearshape") }.tag(2)
             }
             footer
         }
         .padding(20)
         .frame(minWidth: Self.minimumSize.width, maxWidth: .infinity,
-               minHeight: Self.minimumSize.height, idealHeight: fittingHeight ?? 660, maxHeight: .infinity)
-        .background(alignment: .topLeading) { measurer }
-        .background(WindowSizer(height: fittingHeight))
-        .onPreferenceChange(TabHeightsKey.self) { tabHeights = $0 }
+               minHeight: Self.minimumSize.height, idealHeight: 660, maxHeight: .infinity)
+        .background(GeometryReader { proxy in
+            Color.clear.preference(key: RootHeightKey.self, value: proxy.size.height)
+        })
+        .onPreferenceChange(RootHeightKey.self) { rootHeight = $0 }
+        .background(WindowSizer(tab: controller.settingsTab, fit: fits[controller.settingsTab] ?? TabFit(), rootHeight: rootHeight,
+                                minHeight: Self.minimumSize.height, maxShare: Self.screenShare))
+        .onPreferenceChange(TabFitKey.self) { fits = $0 }
     }
 
-    private func tab<Content: View>(@ViewBuilder _ content: () -> Content) -> some View {
+    /// A tab's content, with the same margins on every tab, measured where it is shown.
+    private func tab<Content: View>(_ index: Int, @ViewBuilder _ content: () -> Content) -> some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) { content() }
-                .padding(.vertical, 8).padding(.horizontal, 4)
+                .padding(12)
+                .background(GeometryReader { proxy in
+                    Color.clear.preference(key: TabFitKey.self, value: [index: TabFit(content: proxy.size.height)])
+                })
         }
         .scrollBounceBehavior(.basedOnSize)
-    }
-
-    /// Invisible copies of every tab at the visible tab's width, which only report their heights.
-    private var measurer: some View {
-        ZStack(alignment: .top) {
-            measured(0, menuBarTab, width: Self.innerWidth)
-            measured(1, behaviourTab, width: Self.innerWidth)
-            measured(2, generalTab, width: Self.innerWidth)
-            measured(3, header, width: Self.outerWidth)
-            measured(4, footer, width: Self.outerWidth)
-        }
-        .hidden().allowsHitTesting(false).accessibilityHidden(true)
-    }
-
-    private func measured<Content: View>(_ index: Int, _ content: Content, width: CGFloat) -> some View {
-        content
-            .padding(.vertical, index < 3 ? 8 : 0).padding(.horizontal, index < 3 ? 4 : 0)
-            .frame(width: width)
-            .fixedSize(horizontal: false, vertical: true)
-            .background(GeometryReader { proxy in
-                Color.clear.preference(key: TabHeightsKey.self, value: [index: proxy.size.height])
-            })
+        .background(GeometryReader { proxy in
+            Color.clear.preference(key: TabFitKey.self, value: [index: TabFit(visible: proxy.size.height)])
+        })
     }
 
     // MARK: Tabs
@@ -228,7 +367,7 @@ private struct SettingsView: View {
     private var menuBarTab: some View {
         VStack(alignment: .leading, spacing: 16) {
             card(L("How it works"), systemImage: "questionmark.circle") {
-                step(1, withIcon("Find the %@ button in your menu bar.", controller.iconStyle.symbol(collapsed: false)))
+                step(1, withIcon("Find the %@ button in your menu bar.", controller.iconStyle.symbol(collapsed: true)))
                 step(2, md(L("Hold ⌘ and drag icons to the **left** of the button to make them hideable.")))
                 step(3, md(L("Click the button to hide or show them. Icons to its right always stay visible.")))
             }
@@ -334,6 +473,28 @@ private struct SettingsView: View {
                     Toggle(L("Hide when mirroring a display"), isOn: $controller.collapseOnMirroring).toggleStyle(.switch)
                 }
             }
+            card(L("Other displays"), systemImage: "display.2") {
+                row(L("Prevent click highlights"),
+                    detail: L("Clicking the empty menu bar beside the button on a display you aren't using can briefly highlight it. Preventing this needs the Device Control and Data Access permission.")) {
+                    Toggle(L("Prevent click highlights"), isOn: $controller.coverOtherDisplays).toggleStyle(.switch)
+                }
+                if controller.coverOtherDisplays {
+                    Divider()
+                    if controller.accessibilityAllowed {
+                        Label(L("Access is allowed. StatusCollapse only reads where menu bar items are."),
+                              systemImage: "checkmark.circle")
+                            .font(.callout).foregroundStyle(.secondary)
+                            .fixedSize(horizontal: false, vertical: true)
+                    } else {
+                        Text(L("Waiting for access. Turn on StatusCollapse in Privacy & Security → Device Control and Data Access. If it's already on, turn it off and on again."))
+                            .font(.callout).foregroundStyle(.secondary)
+                            .fixedSize(horizontal: false, vertical: true)
+                        Button { controller.openAccessibilitySettings() } label: {
+                            Label(L("Open Privacy & Security"), systemImage: "arrow.up.right.square")
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -426,15 +587,10 @@ private struct SettingsView: View {
     private var footer: some View {
         VStack(spacing: 2) {
             Text(L("Right-click the menu bar button for Settings and Quit."))
-            Button { showChangelog.toggle() } label: {
+            Button { ChangelogWindow.show() } label: {
                 Text(L("Version %@ · Build: %@", Self.version, Self.build))
             }
             .buttonStyle(.plain)
-            .popover(isPresented: $showChangelog, arrowEdge: .top) {
-                Text(Self.latestChanges)
-                    .font(.callout).textSelection(.enabled)
-                    .frame(width: 300, alignment: .leading).padding(14)
-            }
         }
         .font(.caption).foregroundStyle(.tertiary)
         .frame(maxWidth: .infinity)
@@ -476,30 +632,9 @@ private struct SettingsView: View {
     private static let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "?"
     private static let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "?"
 
-    /// The newest section of the bundled CHANGELOG.md, as markdown. The changelog is in English.
-    private static let latestChanges: AttributedString = {
-        let text = Bundle.main.url(forResource: "CHANGELOG", withExtension: "md")
-            .flatMap { try? String(contentsOf: $0, encoding: .utf8) } ?? ""
-        let section = text.components(separatedBy: "\n## ").dropFirst().first ?? ""
-        guard !section.isEmpty else { return AttributedString("No changelog available.") }
-        let lines = section.split(separator: "\n", omittingEmptySubsequences: true)
-        let title = "**\(lines[0])**"
-        let items = lines.dropFirst().map { $0.hasPrefix("- ") ? "•" + $0.dropFirst() : String($0) }
-        let body = ([title] + items).joined(separator: "\n")
-        return (try? AttributedString(markdown: body, options: .init(interpretedSyntax: .inlineOnlyPreservingWhitespace)))
-            ?? AttributedString(body)
-    }()
-
     private var header: some View {
         HStack(spacing: 12) {
-            Image(systemName: "chevron.left.2")
-                .font(.system(size: 22, weight: .bold))
-                .foregroundStyle(.white)
-                .frame(width: 44, height: 44)
-                .background(
-                    LinearGradient(colors: [Color(red: 0.18, green: 0.83, blue: 0.75), Color(red: 0.05, green: 0.45, blue: 0.56)],
-                                   startPoint: .top, endPoint: .bottom),
-                    in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+            AppBadge()
             VStack(alignment: .leading, spacing: 2) {
                 Text("StatusCollapse").font(.title3.bold())
                 Text(L("Hide menu bar icons you rarely need.")).font(.callout).foregroundStyle(.secondary)
@@ -547,3 +682,4 @@ private struct SettingsView: View {
         }
     }
 }
+

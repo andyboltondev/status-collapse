@@ -1,5 +1,21 @@
 # Changelog
 
+## 1.0.1 - 2026-10-04
+
+Better support for more than one display, and a proper What's New window.
+
+**Displays**
+- Hiding now works on wide displays without a notch: StatusCollapse spans the widest display, so icons can no longer stay visible beside the button
+- Icons no longer jump left before fading out when collapsing with an external display connected
+- The button's copy on other displays now updates when the icons are hidden or shown
+- Pressing the empty menu bar beside the button no longer shows a long highlight on a display without a notch
+- New **Prevent click highlights** setting (Behaviour tab, off by default): with more than one display, also stops that highlight on a display you aren't using. It needs the Device Control and Data Access permission, and Settings shows whether it's allowed and opens Privacy & Security for you
+
+**Settings**
+- The Settings window now resizes to fit each tab as you switch, keeping its top edge in place, with the same margins on every tab
+- What's New opens in its own window, with the version, its release date in your language and the notes grouped by topic
+- The setup walkthrough now shows the button as it looks in the menu bar
+
 ## 1.0.0 - 2026-10-03
 
 First release. Requires macOS 27 on Apple silicon; tested on a MacBook Pro with an M5 Pro chip.
